@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        /* dashboard.css */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .balance {
+            font-size: 1.2em;
+            color: #4CAF50;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .orders-section {
+            margin-top: 20px;
+        }
+
+        .orders-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .orders-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-details > span {
+            flex: 1;
+        }
+
+        .quantity {
+            text-align: right;
+        }
+
+        .status {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .cancel-btn {
+            flex: 0;
+            margin-left: 10px;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h2>Dashboard</h2>
+            <p class="balance">Balance: {{ profile.balance }}</p>
+            <div class="actions">
+                <a href="{% url 'add_money' %}" class="btn btn-primary">Add Money</a>
+                <a href="{% url 'place_order' %}" class="btn btn-secondary">Place Order</a>
+            </div>
+        </header>
+
+        <!-- Display messages here -->
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        
+        {% csrf_token %}
+        <section class="orders-section">
+            <h3>Your Orders</h3>
+            <ul class="orders-list">
+                {% for order in orders %}
+                <li class="order-item" data-order-id="{{ order.id }}">
+                    <div class="order-details">
+                        <span class="question">{{ order.event }}</span>
+                        <span class="response">{{ order.response }}</span>
+                        <span class="quantity">{{ order.quantity }} @ {{ order.price_per_quantity }} each</span>
+                        <span class="status">{{ order.status }}</span>
+                        {% if order.status == "pending" %}
+                        <button class="btn btn-danger cancel-btn" data-order-id="{{ order.id }}">Cancel</button>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        
+
+        {% comment %} <section class="orders-section">
+            <h3>Match Orders</h3>
+            <ul class="orders-list">
+                {% for order in matchorders %}
+                <li class="order-item">
+                    <div class="order-details">
+                        <span class="question">{{ order.event }}</span>
+                        <span class="response">{{ order.response }}</span>
+                        <span class="quantity">{{ order.match_quantity }} @ {{ order.price_per_quantity }} each</span>
+                        <span class="status">{{ order.status }}</span>
+                        {% if order.status == "pending" %}
+                        <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger cancel-btn">Cancel</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section class="orders-section">
+            <h3>cancel Orders</h3>
+            <ul class="orders-list">
+                {% for order in cancelorders %}
+                <li class="order-item">
+                    <div class="order-details">
+                        <span class="question">{{ order.event }}</span>
+                        <span class="response   ">{{ order.response }}</span>
+                        <span class="quantity">{{ order.cancel_quantity }} @ {{ order.price_per_quantity }} each</span>
+                        <span class="status">{{ order.status }}</span>
+                        {% if order.status == "pending" %}
+                        <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger cancel-btn">Cancel</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </section> {% endcomment %}
+    </div>
+    <!-- Include jQuery if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('.cancel-btn').click(function(event) {
+            event.preventDefault(); // Prevent default button behavior
+    
+            var button = $(this);
+            var orderId = button.data('order-id'); // Get the order ID
+    
+            $.ajax({
+                url: '/cancel_order/' + orderId + '/', // URL for Django view
+                type: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(), // CSRF token
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Remove the order item from the UI without showing any message
+                        button.closest('.order-item').remove();
+                    }
+                    // No messages or additional actions
+                }
+                // No error or complete functions
+            });
+        });
+    });
+    </script>
+    
+</body>
+</html>

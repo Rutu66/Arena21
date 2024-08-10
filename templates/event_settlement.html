@@ -1,0 +1,13 @@
+
+
+  <h1>event Settlement</h1>
+  <p>Settle the event by selecting a response:</p>
+  <form method="post" action="{% url 'settle_event' event.id 'yes' %}">
+    {% csrf_token %}
+    <button type="submit">Yes</button>
+  </form>
+  <form method="post" action="{% url 'settle_event' event.id 'no' %}">
+    {% csrf_token %}
+    <button type="submit">No</button>
+  </form>
+

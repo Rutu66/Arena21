@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive UI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            color: #00796b;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #b2dfdb;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            border: 2px solid #00796b;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .greeting h1 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #00796b;
+        }
+
+        .greeting p {
+            margin: 0;
+            color: #004d40;
+        }
+
+        .menu-button {
+            font-size: 1.5em;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #00796b;
+        }
+
+        .balance-card {
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            max-width: 300px;
+            margin: 15px auto;
+            text-align: center;
+            background: linear-gradient(135deg, #00bcd4, #4caf50);
+            color: #ffffff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 140%;
+            height: 140%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            z-index: 0;
+            transform: rotate(-30deg);
+        }
+
+        .balance-card h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            z-index: 1;
+            position: relative;
+            color: #ffffff;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            margin: 10px 0;
+            font-weight: 700;
+            z-index: 1;
+            position: relative;
+            color: #ffffff;
+        }
+
+        .balance-actions {
+            display: flex;
+            justify-content: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        .balance-actions button {
+            padding: 10px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            color: #ffffff;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .my-account {
+            background-color: #3f51b5;
+        }
+
+        .my-account:hover {
+            background-color: #303f9f;
+            transform: translateY(-1px);
+        }
+
+        .category {
+            margin: 20px 0;
+        }
+
+        .category h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #00796b;
+        }
+
+        .category-list {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 0;
+            width: 100%;
+        }
+
+        .category-item {
+            flex: 0 0 auto;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: transform 0.3s;
+            min-width: 120px;
+            box-sizing: border-box;
+        }
+
+        .category-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-item img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+            transition: transform 0.3s;
+        }
+
+        .category-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .category-item p {
+            margin-top: 8px;
+            font-size: 1em;
+            color: #004d40;
+        }
+
+        .trending-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .trending-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            gap: 10px;
+            position: relative;
+        }
+
+        .trending-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+        }
+
+        .trending-item .live {
+            background-color: #d32f2f;
+            color: white;
+            border-radius: 5px;
+            padding: 2px 5px;
+            font-size: 0.8em;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .question-card {
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 35px;
+        }
+
+        .question-card .logo {
+            width: 100%;
+            height: 75px;
+            border-radius: 15px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-card .logo img {
+            width: 15%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .question-card .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-card h3 {
+            margin: 0;
+            font-size: 1.4em;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .question-card h4 {
+            margin: 12px 0;
+            font-size: 1.1em;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .question-card .additional-info {
+            display: flex;
+            align-items: center;
+            font-size: 1em;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .question-card .additional-info .traders-count {
+            display: flex;
+            align-items: center;
+            margin-right: 18px;
+        }
+
+        .question-card .additional-info .traders-count::before {
+            content: "\1F465";
+            margin-right: 6px;
+        }
+
+        .question-card .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+
+        .question-card button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            flex: 1;
+        }
+
+        .question-card button.yes {
+            background-color: #e0f7fa;
+            color: #00796b;
+            margin-right: 10px;
+        }
+
+        .question-card button.yes:hover {
+            background-color: #b2ebf2;
+        }
+
+        .question-card button.no {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        .question-card button.no:hover {
+            background-color: #ffcdd2;
+        }
+
+
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .balance-card {
+                margin: 10px auto;
+            }
+
+            .question-card {
+                margin-top: 20px;
+                padding: 20px;
+            }
+
+            .category-list {
+                gap: 10px;
+            }
+
+            .category-item {
+                min-width: 100px;
+                padding: 10px;
+            }
+
+            .trending-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <style>
+        /* Modal container */
+    .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    bottom: 0; /* Align the modal to the bottom */
+    width: 100%;
+    max-height: 100%; /* Ensure modal doesn’t exceed the viewport height */
+    overflow: auto; /* Enable scrolling if the content overflows */
+    }
+    
+    /* Modal content container */
+    .modal-content {
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 100vh; /* Limit the height of the modal content */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    }
+    
+    /* Close button */
+    .close {
+    color: #888;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+    }
+    
+    .close:hover,
+    .close:focus {
+    color: #000;
+    text-decoration: none;
+    }
+    
+    /* Heading style */
+    h2 {
+    font-size: 2.2em;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #555;
+    font-weight: 400;
+    line-height: 1.3;
+    font-family: 'Helvetica Neue', sans-serif;
+    border-bottom: 2px solid #eee; /* Subtle border */
+    padding-bottom: 10px;
+    display: inline-block;
+    }
+    
+    
+    /* Response buttons container */
+    .response-buttons {
+    display: flex;
+    justify-content: space-around; /* Adjust spacing to be more even */
+    align-items: center; /* Center items vertically */
+    margin: 20px auto; /* Center container with margin */
+    padding: 10px; /* Add padding around container */
+    max-width: 600px; /* Restrict maximum width for a neat layout */
+    background-color: #f8f9fa; /* Light background for modern look */
+    border-radius: 12px; /* Rounded corners for a modern touch */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+    
+    /* Individual response buttons */
+    .response-button {
+    flex: 1;
+    margin: 0 10px; /* Space between buttons */
+    padding: 16px; /* Slightly increased padding */
+    font-size: 1.1em; /* Slightly smaller font size */
+    cursor: pointer;
+    border: none;
+    border-radius: 8px; /* Rounded corners for buttons */
+    color: #fff;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    text-align: center; /* Center text */
+    font-weight: 500; /* Make text slightly bolder */
+    }
+    
+    /* Yes button */
+    #yesButton {
+    background: linear-gradient(135deg, #28a745, #218838);
+    }
+    
+    /* No button */
+    #noButton {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    }
+    
+    /* Active state for buttons */
+    .response-button.active {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+    }
+    
+    /* Add hover effects */
+    .response-button:hover {
+    background: rgba(0, 0, 0, 0.1); /* Light overlay on hover */
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+    }
+    
+    
+    /* Container for sliders */
+    .price-quantity {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    background: #ffffff; /* Clean white background */
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+    }
+    
+    /* Overlay graphic */
+    .price-quantity::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 235, 59, 0.2), rgba(33, 150, 243, 0.1));
+    z-index: 0;
+    transform: rotate(-30deg);
+    }
+    
+    /* Slider container */
+    .price-slider, .quantity-slider {
+    flex: 1;
+    margin: 0 15px;
+    position: relative;
+    z-index: 1;
+    }
+    
+    /* Slider Track */
+    .price-slider input[type="range"], .quantity-slider input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(to right, #76c7c0, #d0e6f0); /* Gradient track */
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.3s ease;
+    }
+    
+    /* Hover effect for slider track */
+    .price-slider input[type="range"]:hover, .quantity-slider input[type="range"]:hover {
+    background: linear-gradient(to right, #4db6ac, #a9d2f1); /* Darker gradient on hover */
+    }
+    
+    /* Slider Thumb */
+    .price-slider input[type="range"]::-webkit-slider-thumb, 
+    .quantity-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    background: radial-gradient(circle, #ff4081, #d81b60); /* Gradient thumb */
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, transform 0.3s ease;
+    }
+    
+    /* Darker thumb on active state */
+    .price-slider input[type="range"]:active::-webkit-slider-thumb, 
+    .quantity-slider input[type="range"]:active::-webkit-slider-thumb {
+    background: radial-gradient(circle, #c2185b, #880e4f); /* Darker gradient on active */
+    transform: scale(1.2);
+    }
+    
+    /* For Firefox */
+    .price-slider input[type="range"]::-moz-range-thumb, 
+    .quantity-slider input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    background: radial-gradient(circle, #ff4081, #d81b60); /* Gradient thumb */
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, transform 0.3s ease;
+    }
+    
+    /* Label Styling */
+    label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    z-index: 1;
+    }
+    
+    /* Number Input Styling */
+    input[type="number"] {
+    width: 100%;
+    padding: 14px;
+    font-size: 1em;
+    border: 1px solid #d0d0d0; /* Soft border color */
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #fafafa; /* Light background for input */
+    color: #333;
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+    }
+    
+    /* Range Label */
+    .range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 8px;
+    position: absolute;
+    width: 100%;
+    top: 15px; /* Adjust this value as needed */
+    left: 0;
+    z-index: 2;
+    }
+    
+    /* Slider Container */
+    .slider-container {
+    position: relative;
+    }
+    
+    
+    /* Summary text */
+    /* Ultra-modern bet summary container with updated glassmorphism and neumorphism effects */
+    .bet-summary {
+    display: flex;
+    justify-content: space-between; /* Space out the two columns evenly */
+    
+    max-width: 800px; /* Adjusted width for a balanced design */
+    margin: 20px auto; /* Increased margin for more spacing */
+    padding: 10px; /* Increased padding for a spacious feel */
+    border-radius: 24px; /* Larger rounded corners for a sleek look */
+    background: rgba(255, 255, 255, 0.15); /* Enhanced glassmorphism effect with deeper transparency */
+    backdrop-filter: blur(15px); /* Stronger frosted glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border with more contrast */
+    
+    font-family: 'Poppins', sans-serif; /* Modern font */
+    color: #444; /* Slightly lighter text color for better readability */
+    position: relative;
+    overflow: hidden; /* Contain pseudo-elements */
+    }
+    
+    /* Radial gradient overlay for added depth */
+    .bet-summary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top left, #ff6f61, #d6cfcf); /* Updated gradient overlay */
+    opacity: 0.15; /* Slightly increased opacity for a more vibrant effect */
+    z-index: 0;
+    }
+    
+    .bet-summary .column {
+    display: flex;
+    flex-direction: column; /* Stack label and value vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    text-align: center; /* Center text within each column */
+    z-index: 1; /* Ensure text is above gradient */
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    padding: 25px; /* Increased padding for a more spacious feel */
+    border-radius: 16px; /* Larger border radius for neumorphism */
+    background: rgba(255, 255, 255, 0.4); /* Enhanced neumorphism effect with slightly increased transparency */
+    box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.3), 8px 8px 16px rgba(255, 255, 255, 0.7); /* More pronounced neumorphism shadow */
+    }
+    
+    .bet-summary .column:hover {
+    background: rgba(255, 255, 255, 0.6); /* Slightly brighter background on hover */
+    transform: scale(1.08); /* Slightly enlarge on hover for emphasis */
+    box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.2), 10px 10px 20px rgba(255, 255, 255, 0.8); /* Enhanced shadow on hover */
+    }
+    
+    .bet-summary .label {
+    font-size: 1.1em; /* Slightly larger font size for labels */
+    color: #777; /* Light gray for labels */
+    margin: 0 0 10px; /* Increased space below the label */
+    font-weight: 600; /* Semi-bold for emphasis */
+    }
+    
+    .bet-summary .amount {
+    font-size: 2em; /* Larger font size for amounts */
+    font-weight: 800; /* Bold font weight for prominence */
+    color: #ff6f61; /* Vibrant coral for amounts */
+    margin: 0; /* Remove default margins */
+    }
+    
+    
+    
+    
+    /* Swipe button style */
+    /* Container for centering and responsive behavior */
+    .swipe-container {
+    
+    max-width: 400px; 
+    margin: 0 auto;
+    padding: 0 15px;
+    }
+    
+    /* Wrapper for button background and styling */
+    .swipe-wrapper {
+    background-color: #ffffff; /* Clean white background */
+    border-radius: 50px; /* Fully rounded edges for a modern look */
+    position: relative;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Deep shadow for a floating effect */
+    }
+    
+    /* Hover effect */
+    .swipe-wrapper:hover {
+    background-color: #f7f7f7; /* Light gray on hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25); /* Enhanced shadow */
+    transform: scale(1.05); /* Slight scaling effect on hover */
+    }
+    
+    /* Styling for the button text */
+    .swipe-button {
+    width: 100%;
+    background-color: transparent;
+    color: #444; /* Dark gray text */
+    font-size: 1em; /* Standard text size */
+    text-align: center;
+    font-weight: 600; /* Bold text */
+    text-transform: uppercase;
+    letter-spacing: 0.1em; /* Increased letter spacing */
+    }
+    
+    /* Handle styling */
+    /* Handle styling */
+    .swipe-handle {
+    position: absolute;
+    top: 50%;
+    left: 12px; 
+    transform: translateY(-50%);
+    background-color: #00796b; /* Initial teal handle */
+    border-radius: 50%; /* Circular handle */
+    width: 65px; 
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Larger shadow for depth */
+    color: #ffffff; /* White text for contrast */
+    font-size: 1.5em; /* Increase font-size to fit the handle */
+    font-weight: bold; /* Bold text */
+    }
+    
+    /* Arrow inside the handle */
+    /* Arrow icon inside the handle */
+    .swipe-handle::before {
+    content: '➡'; /* Unicode for right arrow */
+    font-size: 2em; /* Larger font size for bold appearance */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the arrow */
+    color: #ffffff; /* Arrow color */
+    font-weight: bold; /* Ensure bold appearance */
+    }
+    
+    
+    /* Active state for Yes response */
+    .swipe-wrapper.active {
+    background-color: #66bb6a; /* Light green for Yes response */
+    }
+    
+    /* Active state for No response */
+    .swipe-wrapper.no-active {
+    background-color: #ef5350; /* Light red for No response */
+    }
+    
+    /* Handle moved to the end on Yes active */
+    .swipe-wrapper.active .swipe-handle {
+    transform: translateY(-50%) translateX(calc(100% - 80px)); /* Move handle to the end */
+    }
+    
+    /* Handle moved to the end on No active */
+    .swipe-wrapper.no-active .swipe-handle {
+    transform: translateY(-50%) translateX(calc(100% - 80px)); /* Move handle to the end */
+    }
+    
+    /* Keyframe animation for swipe effect */
+    @keyframes swipeEffect {
+    0% { transform: translateY(-50%) translateX(12px); }
+    100% { transform: translateY(-50%) translateX(calc(100% - 80px)); }
+    }
+    
+    /* Animation trigger for swipe completion */
+    .swipe-wrapper.completed .swipe-handle {
+    animation: swipeEffect 0.4s forwards;
+    }
+    
+    
+    
+    .balance-amount-model {
+    font-size: 1.1em; /* Readable font size */
+    margin: 20px auto; /* Centered with ample spacing */
+    font-weight: 400; /* Regular weight for clarity */
+    color: #333; /* Dark text for high contrast */
+    text-align: center;
+    border-radius: 8px; /* Rounded corners for a friendly look */
+    padding: 15px 20px; /* Comfortable padding for touchability */
+    background: #ffffff; /* Clean white background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for subtle depth */
+    font-family: 'Arial', sans-serif; /* Simple, legible font */
+    letter-spacing: 0.5px; /* Slightly increased spacing for readability */
+    border: 1px solid #ddd; /* Light border for definition */
+    max-width: 280px; /* Adequate width for content visibility */
+    transition: background 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    }
+    
+    /* Hover effect for interactivity */
+    .balance-amount-model:hover {
+    background: #f1f1f1; /* Light background change on hover for feedback */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow on hover */
+    cursor: pointer; /* Pointer cursor to indicate clickability */
+    }
+    
+    
+    
+    .order-book-table {
+    max-height: 223px; /* Maintain container size for better content display */
+    overflow-y: auto;
+    border-radius: 12px; /* More pronounced rounded corners */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Slightly deeper shadow for enhanced depth */
+    background: #fafafa; /* Light gray background for a modern feel */
+    padding: 12px; /* Add padding inside the container */
+    margin: 20px 0;
+    }
+    
+    .order-book-table table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 16px; /* Larger font size for better readability */
+    color: #444; /* Darker text color for better contrast */
+    }
+    
+    .order-book-table thead {
+    position: sticky;
+    top: 0; /* Fixed header at the top of the table */
+    z-index: 20;
+    background: #ffffff; /* White background for headers */
+    color: #333; /* Darker text color for contrast */
+    font-weight: 600; /* Bold font for headers */
+    font-size: 16px; /* Slightly larger font for headers */
+    border-bottom: 2px solid #e0e0e0; /* Subtle border for separation */
+    }
+    
+    .order-book-table th, .order-book-table td {
+    padding: 12px 16px; /* Consistent padding for readability */
+    border-bottom: 1px solid #e0e0e0; /* Subtle border for rows */
+    transition: background-color 0.3s ease; /* Smooth background transition */
+    }
+    
+    .order-book-table th {
+    background-color: #f4f4f4; /* Light gray background for headers */
+    font-weight: 700; /* Bold text for headers */
+    }
+    
+    .order-book-table tbody tr:hover {
+    background-color: #f9f9f9; /* Light hover effect for better UX */
+    }
+    
+    .order-book-table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* White background for even rows */
+    }
+    
+    .order-book-table tbody tr:nth-child(odd) {
+    background-color: #f5f5f5; /* Slightly darker gray for odd rows */
+    }
+    
+    .order-book-table tbody td {
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Ellipsis for overflow text */
+    vertical-align: middle; /* Vertically center text */
+    }
+    
+    .order-book-table tbody td:first-child {
+    font-weight: 500; /* Slightly bold text for the first column */
+    color: #666; /* Lighter color for the first column */
+    }
+    
+    .order-book-table tbody tr {
+    border-radius: 6px; /* Subtle rounding on rows */
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
+    }
+    
+    .order-book-table tbody tr:hover {
+    transform: scale(1.02); /* Slightly scale up on hover */
+    }
+    
+    
+    
+    
+    #questionTitle {
+    font-size: 1.8em; /* Slightly smaller but still prominent */
+    
+    text-align: center;
+    color: #444; /* Soft gray for a modern touch */
+    font-weight: Bold; /* Bold weight for emphasis */
+    line-height: 1.2; /* Tight line height for a compact look */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Clean and modern font */
+    position: relative;
+    text-transform: uppercase; /* Uppercase for a modern, bold effect */
+    }
+    
+    #questionTitle::after {
+    content: "";
+    display: block;
+    width: 50px; /* Narrower underline for a sleek look */
+    height: 3px; /* Slightly thicker for a modern feel */
+    background: #FF5722; /* Vibrant accent color */
+    margin: 10px auto 0;
+    border-radius: 10px; /* Fully rounded edges */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+    
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="profile">
+                <img src="https://via.placeholder.com/50" alt="User Profile">
+                <div class="greeting">
+                    <h1>Welcome Back! </h1>
+                    <p>Here are the latest Events...</p>
+                </div>
+            </div>
+            <button class="menu-button" onclick="toggleSidebar()">&#9776;</button>
+        </header>
+
+        <!-- Balance Card Section -->
+        <div class="balance-card">
+            <h2>Total Balance</h2>
+            <div class="balance-amount">&#8377; {{ profile.balance }}</div>
+            <div class="balance-actions">
+                <button class="my-account">My Account</button>
+            </div>
+        </div>
+
+        <!-- Categories Section -->
+        <section class="categories">
+            <h2>Categories</h2>
+            <div class="category-list">
+                {% for category in categories %}
+                <div class="category-item">
+                    <img src="{{ category.icon.url }}" alt="Category">
+                    <p>{{ category.name }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Trending Section -->
+        <section class="trending">
+            <h2>Trading Now</h2>
+            <div class="trending-section">
+                {% for iteam in subcategories %}
+                <div class="trending-item">
+                    <img src="{{ iteam.icon.url }}" alt="{{ iteam.name }}">
+                    <span>{{ iteam.name }}</span>
+                    {% if iteam.is_live %}
+                    <div class="live">LIVE</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section class="events">
+            {% for event in events %}
+            <div class="question-card">
+                <div class="logo">
+                    <img src="{{ event.icon.url }}" alt="{{ event.name }}">
+                </div>
+                <div class="content">
+                    <h3>{{ event.title }}</h3>
+                    <h4>{{ event.description }}</h4>
+                    <div class="actions">
+                        <button class="yes" onclick="openForm('{{ event.id }}', 'yes', '{{ event.title }}')">Yes ₹8</button>
+                        <button class="no" onclick="openForm('{{ event.id }}', 'no', '{{ event.title }}')">No ₹2</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </div>
+
+    <div id="betForm" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <h2 id="questionTitle">Question goes here</h2>
+    
+            <!-- Existing betting form elements -->
+            <div class="response-buttons">
+                <button type="button" class="response-button" id="yesButton" onclick="setResponse('yes')">Yes ₹<span id="yesPrice">8</span></button>
+                <button type="button" class="response-button" id="noButton" onclick="setResponse('no')">No ₹<span id="noPrice">2</span></button>
+            </div>
+            <form id="orderForm" method="post" action="{% url 'place_order' %}">
+                {% csrf_token %}
+                <input type="hidden" id="event_id" name="event" value="">
+                <input type="hidden" id="response" name="response" value="">
+                
+                <div class="price-quantity">
+                    <div class="price-slider slider-container">
+                        <label for="price">Price</label>
+                        <div class="range-labels">
+                            <span>1</span>
+                            <span>10</span>
+                        </div>
+                        <input type="range" id="price" name="price_per_quantity" min="1" max="10" value="5" step="1">
+                        <input type="number" id="priceValue" name="price_per_quantity" min="1" max="10" value="5" step="1">
+                    </div>
+                    <div class="quantity-slider slider-container">
+                        <label for="quantity">Quantity</label>
+                        <div class="range-labels">
+                            <span>1</span>
+                            <span>1000</span>
+                        </div>
+                        <input type="range" id="quantity" name="quantity" min="1" max="1000" value="500" step="1">
+                        <input type="number" id="quantityValue" name="quantity" min="1" max="1000" value="500" step="1">
+                    </div>
+                </div>
+                
+                <div class="bet-summary">
+                    <div class="column">
+                        <p class="label">You put</p>
+                        <p class="amount">₹<span id="putAmount">2500.0</span></p>
+                    </div>
+                    <div class="column">
+                        <p class="label">You get</p>
+                        <p class="amount">₹<span id="getAmount">5000.0</span></p>
+                    </div>
+                </div>
+            
+                <!-- Static Order Book -->
+                <div class="order-book">
+                    <ul class="nav">
+                        <!-- Navigation elements if needed -->
+                    </ul>
+                    <div class="order-book-table">
+                        <table id="orderTable">
+                            <thead>
+                                <tr>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderTableBody">
+                                <!-- Rows will be added dynamically here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="swipe-container">
+                    <div class="swipe-wrapper" id="swipeWrapper">
+                        <div class="swipe-button" id="swipeButton">
+                            <span class="swipe-text" id="swipeText">Slide to Place Order</span>
+                            <div class="swipe-handle" id="swipeHandle">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <p class="balance-amount-model">Your Balance: &#8377; {{ profile.balance }}</p>
+            </form>
+            
+            <div id="message"></div> <!-- Display success or error messages here -->
+            
+        </div>
+    </div>
+
+    <script>
+        let isSwiping = false;
+        let startX;
+        let currentX;
+        const minSwipeDistance = 100;
+        const swipeHandle = document.getElementById('swipeHandle');
+        const swipeWrapper = document.getElementById('swipeWrapper');
+        const swipeText = document.getElementById('swipeText');
+    
+        function startSwipe(event) {
+            isSwiping = true;
+            startX = event.clientX || event.touches[0].clientX; // Support for both mouse and touch
+            swipeWrapper.classList.add('swiping');
+            document.addEventListener('mousemove', swipeMove);
+            document.addEventListener('mouseup', endSwipe);
+            document.addEventListener('touchmove', swipeMove, { passive: false });  // Updated touch support
+            document.addEventListener('touchend', endSwipe);    // Touch support
+        }
+    
+        function swipeMove(event) {
+            if (!isSwiping) return;
+            currentX = event.clientX || event.touches[0].clientX; // Support for both mouse and touch
+            let diffX = currentX - startX;
+    
+            if (diffX > 0 && diffX <= swipeWrapper.offsetWidth - swipeHandle.offsetWidth) {
+                swipeHandle.style.left = `${diffX}px`;
+                swipeText.style.opacity = 1 - (diffX / swipeWrapper.offsetWidth);
+                event.preventDefault(); // Prevent default touch behavior like scrolling
+            }
+        }
+    
+        function endSwipe(event) {
+            if (!isSwiping) return;
+            isSwiping = false;
+            let diffX = currentX - startX;
+    
+            if (diffX > swipeWrapper.offsetWidth / 2) {
+                // Complete the swipe and submit the form
+                swipeHandle.style.left = `${swipeWrapper.offsetWidth - swipeHandle.offsetWidth}px`;
+                document.getElementById('orderForm').submit();
+                setTimeout(resetSwipe, 1000); // Delay for reset after submission
+            } else {
+                // Revert the swipe
+                resetSwipe();
+            }
+    
+            swipeWrapper.classList.remove('swiping');
+            document.removeEventListener('mousemove', swipeMove);
+            document.removeEventListener('mouseup', endSwipe);
+            document.removeEventListener('touchmove', swipeMove);  // Updated touch support
+            document.removeEventListener('touchend', endSwipe);    // Touch support
+        }
+    
+        function resetSwipe() {
+            swipeHandle.style.left = '12px'; // Reset to initial position
+            swipeText.style.opacity = 1;
+        }
+    
+        // Attach event listeners
+        swipeHandle.addEventListener('mousedown', startSwipe);
+        swipeHandle.addEventListener('touchstart', startSwipe, { passive: true }); // Updated touch support
+    
+        function openForm(eventId, responseType, title) {
+            document.getElementById('betForm').style.display = 'block';
+            document.getElementById('questionTitle').innerText = title;
+            document.getElementById('event_id').value = eventId;
+            setResponse(responseType);
+        }
+    
+        function closeForm() {
+            document.getElementById('betForm').style.display = 'none';
+        }
+    
+        function setResponse(responseType) {
+            document.getElementById('response').value = responseType;
+            if (responseType === 'yes') {
+                document.getElementById('yesButton').classList.add('active');
+                document.getElementById('noButton').classList.remove('active');
+                swipeWrapper.classList.add('active');
+                swipeWrapper.classList.remove('no-active');
+            } else {
+                document.getElementById('noButton').classList.add('active');
+                document.getElementById('yesButton').classList.remove('active');
+                swipeWrapper.classList.add('no-active');
+                swipeWrapper.classList.remove('active');
+            }
+            calculateAmounts();
+            fetchData(responseType);
+        }
+    
+        function calculateAmounts() {
+            var price = document.getElementById('price').value;
+            var quantity = document.getElementById('quantity').value;
+            document.getElementById('putAmount').innerText = (price * quantity).toFixed(2);
+            document.getElementById('getAmount').innerText = (10 * quantity).toFixed(2);
+        }
+    
+        document.getElementById('price').addEventListener('input', function() {
+            document.getElementById('priceValue').value = this.value;
+            calculateAmounts();
+        });
+    
+        document.getElementById('quantity').addEventListener('input', function() {
+            document.getElementById('quantityValue').value = this.value;
+            calculateAmounts();
+        });
+    
+        document.getElementById('priceValue').addEventListener('input', function() {
+            document.getElementById('price').value = this.value;
+            calculateAmounts();
+        });
+    
+        document.getElementById('quantityValue').addEventListener('input', function() {
+            document.getElementById('quantity').value = this.value;
+            calculateAmounts();
+        });
+    
+        function fetchData(responseType) {
+            const orderTableBody = document.getElementById('orderTableBody');
+            orderTableBody.innerHTML = ''; // Clear existing rows
+    
+            let orderData = {
+                yes: [
+                    { price: 8, quantity: 100 },
+                    { price: 7, quantity: 200 },
+                    { price: 6, quantity: 300 }
+                ],
+                no: [
+                    { price: 2, quantity: 150 },
+                    { price: 3, quantity: 250 },
+                    { price: 4, quantity: 350 }
+                ]
+            };
+    
+            let dataToUse = orderData[responseType];
+    
+            dataToUse.forEach(order => {
+                let row = `<tr><td>${order.price}</td><td>${order.quantity}</td></tr>`;
+                orderTableBody.innerHTML += row;
+            });
+        }
+    </script>
+
+    
+    
+
+</body>
+
+
+</html>

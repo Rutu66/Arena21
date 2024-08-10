@@ -1,0 +1,9 @@
+
+
+<h2>Place Order</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Place Order</button>
+</form>
+
