@@ -31,6 +31,23 @@ def signup_view(request):
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
 
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('index')  # Redirect to index if the user is already logged in
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = form.get_user()  # Ensure your form has a method to get the user
+            auth_login(request, user)  # Use auth_login for logging in the user
+            return redirect('index')  # Redirect to index after successful login
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
+
+@login_required
 def index_view(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
 
@@ -51,28 +68,49 @@ def index_view(request):
     return render(request, 'index.html', context)
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('index')
-    else:
-        form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+
 
 def lending_view(request):
+    if request.user.is_authenticated:
+        return redirect('index')
     return render(request, 'lending.html')
 
-@login_required
+# @login_required
+# def dashboard(request):
+#     profile, created = Profile.objects.get_or_create(user=request.user)
+#     orders = Order.objects.filter(user=request.user)
+#     matchorders = MatchOrder.objects.filter(user=request.user)
+#     cancelorders = CancelOrder.objects.filter(user=request.user)
+    
+#     return render(request, 'dashboard.html', {'profile': profile, 'orders': orders, 'matchorders': matchorders, 'cancelorders': cancelorders})
+
+from collections import defaultdict
+
 def dashboard(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
+    
+    # Get all orders, match orders, and cancel orders
     orders = Order.objects.filter(user=request.user)
     matchorders = MatchOrder.objects.filter(user=request.user)
     cancelorders = CancelOrder.objects.filter(user=request.user)
+
+    # Group everything by event
+    grouped_events = defaultdict(lambda: {'orders': [], 'matchorders': [], 'cancelorders': []})
     
-    return render(request, 'dashboard.html', {'profile': profile, 'orders': orders, 'matchorders': matchorders, 'cancelorders': cancelorders})
+    for order in orders:
+        grouped_events[order.event]['orders'].append(order)
+    
+    for matchorder in matchorders:
+        grouped_events[matchorder.event]['matchorders'].append(matchorder)
+    
+    for cancelorder in cancelorders:
+        grouped_events[cancelorder.event]['cancelorders'].append(cancelorder)
+
+    return render(request, 'dashboard.html', {
+        'profile': profile, 
+        'grouped_events': dict(grouped_events)
+    })
+
 
 @login_required
 def add_money(request):
@@ -380,14 +418,25 @@ def settle_event(request, event_id, settle_response):
 @csrf_exempt
 def fetch_order_data(request):
     response_type = request.GET.get('response_type', None)
+    event_id = request.GET.get('event_id', None)
+    
+    print("*******************************************************")
+    print(f"response_type: {response_type}")
+    print(f"event_id: {event_id}")
+    print("******************************************************")
+    
+    # Validate event_id
+    if not event_id:
+        return JsonResponse({'error': 'Event ID is required'}, status=400)
+
+    # Filter orders based on event_id
+    orders = Order.objects.filter(event_id=event_id)
     
     # Filter based on response_type
     if response_type == 'yes':
-        orders = Order.objects.filter(response='no')
+        orders = orders.filter(response='no')
     elif response_type == 'no':
-        orders = Order.objects.filter(response='yes')
-    else:
-        orders = Order.objects.all()
+        orders = orders.filter(response='yes')
     
     # Define the mapping for price_per_quantity
     price_mapping = {
@@ -395,7 +444,7 @@ def fetch_order_data(request):
         2: 8,
         3: 7,
         4: 6,
-        5: 4,
+        5: 5,
         6: 4,
         7: 3,
         8: 2,
@@ -429,8 +478,3 @@ def fetch_order_data(request):
     ]
     
     return JsonResponse(data, safe=False)
-
-
-
-
-

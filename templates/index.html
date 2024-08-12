@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,885 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive UI</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #ffffff;
-            color: #00796b;
-        }
 
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #b2dfdb;
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-        }
-
-        .profile img {
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            margin-right: 15px;
-            border: 2px solid #00796b;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .greeting h1 {
-            margin: 0;
-            font-size: 1.2em;
-            color: #00796b;
-        }
-
-        .greeting p {
-            margin: 0;
-            color: #004d40;
-        }
-
-        .menu-button {
-            font-size: 1.5em;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #00796b;
-        }
-
-        .balance-card {
-            border: none;
-            border-radius: 12px;
-            padding: 15px;
-            max-width: 300px;
-            margin: 15px auto;
-            text-align: center;
-            background: linear-gradient(135deg, #00bcd4, #4caf50);
-            color: #ffffff;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .balance-card::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 140%;
-            height: 140%;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            z-index: 0;
-            transform: rotate(-30deg);
-        }
-
-        .balance-card h2 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            z-index: 1;
-            position: relative;
-            color: #ffffff;
-        }
-
-        .balance-amount {
-            font-size: 32px;
-            margin: 10px 0;
-            font-weight: 700;
-            z-index: 1;
-            position: relative;
-            color: #ffffff;
-        }
-
-        .balance-actions {
-            display: flex;
-            justify-content: center;
-            z-index: 1;
-            position: relative;
-        }
-
-        .balance-actions button {
-            padding: 10px 20px;
-            font-size: 14px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            color: #ffffff;
-            transition: background-color 0.3s, transform 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .my-account {
-            background-color: #3f51b5;
-        }
-
-        .my-account:hover {
-            background-color: #303f9f;
-            transform: translateY(-1px);
-        }
-
-        .category {
-            margin: 20px 0;
-        }
-
-        .category h2 {
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            color: #00796b;
-        }
-
-        .category-list {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding: 10px 0;
-            width: 100%;
-        }
-
-        .category-item {
-            flex: 0 0 auto;
-            text-align: center;
-            
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            transition: transform 0.3s;
-            min-width: 120px;
-            box-sizing: border-box;
-        }
-
-        .category-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .category-item img {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 10px;
-            transition: transform 0.3s;
-        }
-
-        .category-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .category-item p {
-            margin-top: 8px;
-            font-size: 1em;
-            color: #004d40;
-        }
-
-        .trending-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-    /* Keyframes for a subtle bounce animation */
-@keyframes bounce {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
-/* Add the animation to the .trending-item class */
-.trending-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    gap: 10px;
-    position: relative;
-    animation: bounce 2s infinite;
-    margin-bottom: 10px; /* Add margin to separate items in block layout */
-}
-
-
-        .trending-item img {
-            width: 40px;
-            height: 40px;
-            border-radius: 5px;
-        }
-
-        .trending-item .live {
-            background-color: #d32f2f;
-            color: white;
-            border-radius: 5px;
-            padding: 2px 5px;
-            font-size: 0.8em;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
-        .question-card {
-            display: flex;
-            flex-direction: column;
-            padding: 25px;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-            margin-top: 35px;
-        }
-
-        .question-card .logo {
-            width: 100%;
-            height: 75px;
-            border-radius: 15px;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .question-card .logo img {
-            width: 15%;
-            height: auto;
-            border-radius: 15px;
-        }
-
-        .question-card .content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .question-card h3 {
-            margin: 0;
-            font-size: 1.4em;
-            color: #000;
-            font-weight: bold;
-        }
-
-        .question-card h4 {
-            margin: 12px 0;
-            font-size: 1.1em;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .question-card .additional-info {
-            display: flex;
-            align-items: center;
-            font-size: 1em;
-            color: #888;
-            margin-bottom: 12px;
-        }
-
-        .question-card .additional-info .traders-count {
-            display: flex;
-            align-items: center;
-            margin-right: 18px;
-        }
-
-        .question-card .additional-info .traders-count::before {
-            content: "\1F465";
-            margin-right: 6px;
-        }
-
-        .question-card .actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: auto;
-        }
-
-        .question-card button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s;
-            flex: 1;
-        }
-
-        .question-card button.yes {
-            background-color: #e0f7fa;
-            color: #00796b;
-            margin-right: 10px;
-        }
-
-        .question-card button.yes:hover {
-            background-color: #b2ebf2;
-        }
-
-        .question-card button.no {
-            background-color: #ffebee;
-            color: #d32f2f;
-        }
-
-        .question-card button.no:hover {
-            background-color: #ffcdd2;
-        }
-
-
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-
-            .balance-card {
-                margin: 10px auto;
-            }
-
-            .question-card {
-                margin-top: 20px;
-                padding: 20px;
-            }
-
-            .category-list {
-                gap: 10px;
-            }
-
-            .category-item {
-                min-width: 100px;
-                padding: 10px;
-                margin-left : 5px;
-            }
-
-            
-        }
-    </style>
-    <style>
-        /* Modal container */
-    .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    bottom: 0; /* Align the modal to the bottom */
-    width: 100%;
-    max-height: 100%; /* Ensure modal doesn’t exceed the viewport height */
-    overflow: auto; /* Enable scrolling if the content overflows */
-    }
-    
-    /* Modal content container */
-    .modal-content {
-    background-color: #fff;
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 100vh; /* Limit the height of the modal content */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    position: relative;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    overflow-y: auto; /* Enable vertical scrolling if content overflows */
-    }
-    
-    /* Close button */
-    .close {
-    color: #888;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s;
-    }
-    
-    .close:hover,
-    .close:focus {
-    color: #000;
-    text-decoration: none;
-    }
-    
-    /* Heading style */
-    .h2 {
-        font-size: 1.3em;
-        margin-bottom: 15px;
-        color: #00796b;
-    }
-    
-    
-    /* Response buttons container */
-    .response-buttons {
-        display: flex;
-        justify-content: space-between; /* Adjust spacing for a tighter layout */
-        align-items: center; /* Center items vertically */
-        margin: 15px auto; /* Center container with margin */
-        padding: 8px; /* Reduced padding around container */
-        max-width: 500px; /* Slightly narrower container */
-        background-color: #f8f9fa; /* Light background for modern look */
-        border-radius: 8px; /* Rounded corners for a modern touch */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    }
-    
-    /* Individual response buttons */
-    .response-button {
-        flex: 1;
-        margin: 0 8px; /* Space between buttons */
-        padding: 12px; /* Reduced padding */
-        font-size: 1em; /* Reduced font size */
-        cursor: pointer;
-        border: none;
-        border-radius: 6px; /* Rounded corners for buttons */
-        color: #fff;
-        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-        text-align: center; /* Center text */
-        font-weight: 500; /* Make text slightly bolder */
-    }
-    
-    /* Yes button */
-    #yesButton {
-        background: linear-gradient(135deg, #28a745, #218838);
-    }
-    
-    /* No button */
-    #noButton {
-        background: linear-gradient(135deg, #dc3545, #c82333);
-    }
-    
-    /* Active state for buttons */
-    .response-button.active {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        transform: scale(1.03); /* Slightly smaller scale */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
-    }
-    
-    /* Add hover effects */
-    .response-button:hover {
-        background: rgba(0, 0, 0, 0.05); /* Light overlay on hover */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow on hover */
-    }
-    
-    
-    
-    /* Container for sliders */
-    .price-quantity {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    background: #ffffff; /* Clean white background */
-    padding: 10px;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    position: relative;
-    overflow: hidden;
-    }
-    
-    /* Overlay graphic */
-    .price-quantity::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255, 235, 59, 0.2), rgba(33, 150, 243, 0.1));
-    z-index: 0;
-    transform: rotate(-30deg);
-    }
-    
-    /* Slider container */
-    .price-slider, .quantity-slider {
-    flex: 1;
-    margin: 0 15px;
-    position: relative;
-    z-index: 1;
-    }
-    
-    /* Slider Track */
-    .price-slider input[type="range"], .quantity-slider input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(to right, #76c7c0, #d0e6f0); /* Gradient track */
-    border-radius: 10px;
-    outline: none;
-    cursor: pointer;
-    position: relative;
-    transition: background 0.3s ease;
-    }
-    
-    /* Hover effect for slider track */
-    .price-slider input[type="range"]:hover, .quantity-slider input[type="range"]:hover {
-    background: linear-gradient(to right, #4db6ac, #a9d2f1); /* Darker gradient on hover */
-    }
-    
-    /* Slider Thumb */
-    .price-slider input[type="range"]::-webkit-slider-thumb, 
-    .quantity-slider input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 28px;
-    height: 28px;
-    background: radial-gradient(circle, #ff4081, #d81b60); /* Gradient thumb */
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: background 0.3s ease, transform 0.3s ease;
-    }
-    
-    /* Darker thumb on active state */
-    .price-slider input[type="range"]:active::-webkit-slider-thumb, 
-    .quantity-slider input[type="range"]:active::-webkit-slider-thumb {
-    background: radial-gradient(circle, #c2185b, #880e4f); /* Darker gradient on active */
-    transform: scale(1.2);
-    }
-    
-    /* For Firefox */
-    .price-slider input[type="range"]::-moz-range-thumb, 
-    .quantity-slider input[type="range"]::-moz-range-thumb {
-    width: 28px;
-    height: 28px;
-    background: radial-gradient(circle, #ff4081, #d81b60); /* Gradient thumb */
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: background 0.3s ease, transform 0.3s ease;
-    }
-    
-    /* Label Styling */
-    label {
-    display: block;
-    margin-bottom: 12px;
-    font-weight: 500;
-    color: #333;
-    text-align: center;
-    z-index: 1;
-    }
-    
-    /* Number Input Styling */
-    input[type="number"] {
-    width: 100%;
-    padding: 14px;
-    font-size: 1em;
-    border: 1px solid #d0d0d0; /* Soft border color */
-    border-radius: 8px;
-    box-sizing: border-box;
-    background-color: #fafafa; /* Light background for input */
-    color: #333;
-    margin-top: 10px;
-    position: relative;
-    z-index: 1;
-    }
-    
-    /* Range Label */
-    .range-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 8px;
-    position: absolute;
-    width: 100%;
-    top: 15px; /* Adjust this value as needed */
-    left: 0;
-    z-index: 2;
-    }
-    
-    /* Slider Container */
-    .slider-container {
-    position: relative;
-    }
-    
-    
-    /* Summary text */
-        /* Ultra-modern bet summary container with updated glassmorphism and neumorphism effects */
-        .bet-summary {
-            display: flex;
-            justify-content: space-between; /* Evenly distribute columns */
-            max-width: 500px; /* Compact container width */
-            margin: 20px auto; /* Centered with margin */
-            padding: 10px; /* Reduced padding */
-            border-radius: 12px; /* Rounded corners */
-            background: #f4f6f9; /* Very light gray background */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-            font-family: 'Poppins', sans-serif;
-            color: #333; /* Dark text for readability */
-            box-sizing: border-box; /* Include padding and borders in total width */
-        }
-        
-        .bet-summary .column {
-            flex: 1; /* Equal space for each column */
-            display: flex;
-            flex-direction: column; /* Stack label and amount vertically */
-            align-items: center; /* Center items horizontally */
-            justify-content: center; /* Center items vertically */
-            padding: 12px; /* Moderate padding */
-            margin: 0 6px; /* Space between columns */
-            border-radius: 8px; /* Rounded corners */
-            background: #ffffff; /* Clean white background */
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        }
-        
-        .bet-summary .column:hover {
-            background-color: #e2e6ea; /* Light gray on hover */
-            transform: translateY(-2px); /* Subtle lift on hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-        }
-        
-        .bet-summary .label {
-            font-size: 0.8em; /* Smaller font size for labels */
-            color: #6c757d; /* Medium gray for labels */
-            font-weight: 500; /* Medium weight for labels */
-            margin-bottom: 4px; /* Space between label and amount */
-            text-transform: uppercase; /* Uppercase text for emphasis */
-            letter-spacing: 0.5px; /* Slightly spaced letters */
-        }
-        
-        .bet-summary .amount {
-            font-size: 1.5em; /* Slightly larger font size for amounts */
-            font-weight: 700; /* Bold font for prominence */
-            color: #007bff; /* Bright blue for amounts */
-            margin: 0; /* Remove default margins */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow for text */
-        }
-        
-        /* Add a subtle border between columns for separation */
-        .bet-summary .column:not(:last-child) {
-            border-right: 1px solid #dee2e6; /* Light gray border for separation */
-        }
-    
-    
-    
-    
-    
-    /* Swipe button style */
-    /* Container for centering and responsive behavior */
-.swipe-container {
-    max-width: 420px; /* Reduced width */
-    margin: 0 auto;
-    padding: 0 10px;
-}
-
-/* Wrapper for button background and styling */
-.swipe-wrapper {
-    background-color: #ffffff; /* Clean white background */
-    border-radius: 40px; /* Slightly smaller rounded edges */
-    position: relative;
-    padding: 20px; /* Reduced padding */
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    overflow: hidden;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Slightly reduced shadow */
-}
-
-/* Hover effect */
-.swipe-wrapper:hover {
-    background-color: #f7f7f7; /* Light gray on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25); /* Enhanced shadow */
-    transform: scale(1.05); /* Slight scaling effect on hover */
-}
-
-/* Styling for the button text */
-.swipe-button {
-    width: 100%;
-    background-color: transparent;
-    color: #444; /* Dark gray text */
-    font-size: 0.85em; /* Slightly smaller text size */
-    text-align: center;
-    font-weight: 600; /* Bold text */
-    text-transform: uppercase;
-    letter-spacing: 0.1em; /* Increased letter spacing */
-}
-
-/* Handle styling */
-.swipe-handle {
-    position: absolute;
-    top: 50%;
-    left: 8px; /* Adjusted to fit smaller handle */
-    transform: translateY(-50%);
-    background-color: #00796b; /* Initial teal handle */
-    border-radius: 50%; /* Circular handle */
-    width: 50px; /* Reduced handle size */
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.4s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Smaller shadow */
-    color: #ffffff; /* White text for contrast */
-    font-size: 1.2em; /* Adjusted font size to fit the smaller handle */
-    font-weight: bold; /* Bold text */
-}
-
-/* Arrow inside the handle */
-.swipe-handle::before {
-    content: '➡'; /* Unicode for right arrow */
-    font-size: 1.6em; /* Adjusted font size for the arrow */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Center the arrow */
-    color: #ffffff; /* Arrow color */
-    font-weight: bold; /* Ensure bold appearance */
-}
-
-/* Active state for Yes response */
-.swipe-wrapper.active {
-    background-color: #66bb6a; /* Light green for Yes response */
-}
-
-/* Active state for No response */
-.swipe-wrapper.no-active {
-    background-color: #ef5350; /* Light red for No response */
-}
-
-/* Handle moved to the end on Yes active */
-.swipe-wrapper.active .swipe-handle {
-    transform: translateY(-50%) translateX(calc(100% - 60px)); /* Adjusted movement for smaller handle */
-}
-
-/* Handle moved to the end on No active */
-.swipe-wrapper.no-active .swipe-handle {
-    transform: translateY(-50%) translateX(calc(100% - 60px)); /* Adjusted movement for smaller handle */
-}
-
-/* Keyframe animation for swipe effect */
-@keyframes swipeEffect {
-    0% { transform: translateY(-50%) translateX(8px); }
-    100% { transform: translateY(-50%) translateX(calc(100% - 60px)); }
-}
-
-/* Animation trigger for swipe completion */
-.swipe-wrapper.completed .swipe-handle {
-    animation: swipeEffect 0.4s forwards;
-}
-
-    
-    
-    
-    .balance-amount-model {
-    font-size: 1.1em; /* Readable font size */
-    margin: 20px auto; /* Centered with ample spacing */
-    font-weight: 400; /* Regular weight for clarity */
-    
-    text-align: center;
-    border-radius: 8px; /* Rounded corners for a friendly look */
-    padding: 15px 20px; /* Comfortable padding for touchability */
-    background: #ffffff; /* Clean white background */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for subtle depth */
-    font-family: 'Arial', sans-serif; /* Simple, legible font */
-    letter-spacing: 0.5px; /* Slightly increased spacing for readability */
-    border: 1px solid #ddd; /* Light border for definition */
-    max-width: 280px; /* Adequate width for content visibility */
-    transition: background 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
-    }
-    
-    /* Hover effect for interactivity */
-    .balance-amount-model:hover {
-    background: #f1f1f1; /* Light background change on hover for feedback */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow on hover */
-    cursor: pointer; /* Pointer cursor to indicate clickability */
-    }
-    
-    
-    
-    .order-book-table {
-    max-height: 223px; /* Maintain container size for better content display */
-    overflow-y: auto;
-    border-radius: 12px; /* More pronounced rounded corners */
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Slightly deeper shadow for enhanced depth */
-    background: #fafafa; /* Light gray background for a modern feel */
-    padding: 12px; /* Add padding inside the container */
-    margin: 20px 0;
-    }
-    
-    .order-book-table table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-size: 16px; /* Larger font size for better readability */
-    color: #444; /* Darker text color for better contrast */
-    }
-    
-    .order-book-table thead {
-    position: sticky;
-    top: 0; /* Fixed header at the top of the table */
-    z-index: 20;
-    background: #ffffff; /* White background for headers */
-    color: #333; /* Darker text color for contrast */
-    font-weight: 600; /* Bold font for headers */
-    font-size: 16px; /* Slightly larger font for headers */
-    border-bottom: 2px solid #e0e0e0; /* Subtle border for separation */
-    }
-    
-    .order-book-table th, .order-book-table td {
-    padding: 12px 16px; /* Consistent padding for readability */
-    border-bottom: 1px solid #e0e0e0; /* Subtle border for rows */
-    transition: background-color 0.3s ease; /* Smooth background transition */
-    }
-    
-    .order-book-table th {
-    background-color: #f4f4f4; /* Light gray background for headers */
-    font-weight: 700; /* Bold text for headers */
-    }
-    
-    .order-book-table tbody tr:hover {
-    background-color: #f9f9f9; /* Light hover effect for better UX */
-    }
-    
-    .order-book-table tbody tr:nth-child(even) {
-    background-color: #ffffff; /* White background for even rows */
-    }
-    
-    .order-book-table tbody tr:nth-child(odd) {
-    background-color: #f5f5f5; /* Slightly darker gray for odd rows */
-    }
-    
-    .order-book-table tbody td {
-    white-space: nowrap; /* Prevent text wrapping */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Ellipsis for overflow text */
-    vertical-align: middle; /* Vertically center text */
-    }
-    
-    .order-book-table tbody td:first-child {
-    font-weight: 500; /* Slightly bold text for the first column */
-    color: #666; /* Lighter color for the first column */
-    }
-    
-    .order-book-table tbody tr {
-    border-radius: 6px; /* Subtle rounding on rows */
-    transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
-    }
-    
-    .order-book-table tbody tr:hover {
-    transform: scale(1.02); /* Slightly scale up on hover */
-    }
-    
-    </style>
 </head>
+
 
 <body>
     <div class="container">
         <!-- Header Section -->
-        <header class="header">
+        <header class="header"> 
             <div class="profile">
                 <img src="https://via.placeholder.com/50" alt="User Profile">
                 <div class="greeting">
@@ -891,7 +23,8 @@
                     <p>Here are the latest Events...</p>
                 </div>
             </div>
-            <button class="menu-button" onclick="toggleSidebar()">&#9776;</button>
+            <div class="menu-button" onclick="toggleMenu()">☰</div>
+
         </header>
 
         <!-- Balance Card Section -->
@@ -899,8 +32,12 @@
             <h2>Total Balance</h2>
             <div class="balance-amount">&#8377; {{ profile.balance }}</div>
             <div class="balance-actions">
-                <button class="my-account">My Account</button>
+                <a href="{% url 'dashboard' %}" class="my-account-link">
+                    <button class="my-account">My Account</button>
+                </a>
             </div>
+            
+            
         </div>
 
         <!-- Categories Section -->
@@ -951,6 +88,28 @@
             {% endfor %}
         </section>
     </div>
+
+<div id="menu" class="menu">
+    <div class="menu-header">
+        <div class="user-details">
+            <img src="profile-pic-url" alt="Profile Picture" class="profile-pic">
+            <div class="user-info">
+                <span class="username">John Doe</span>
+                <p class="user-handle">@johndoe</p>
+            </div>
+        </div>
+        <span class="close-button" onclick="toggleMenu()">✖</span>
+    </div>
+    <ul class="menu-items">
+        <li><a href="#"><i class="icon-profile"></i>Profile</a></li>
+        <li><a href="#"><i class="icon-dashboard"></i>Dashboard</a></li>
+        <li><a href="#"><i class="icon-portfolio"></i>Portfolio</a></li>
+        <li class="logout"><a href="#"><i class="icon-logout"></i>Logout</a></li>
+    </ul>
+</div>
+
+
+    
 
     <div id="betForm" class="modal">
         <div class="modal-content">
@@ -1090,6 +249,8 @@
             document.removeEventListener('touchmove', swipeMove);  // Updated touch support
             document.removeEventListener('touchend', endSwipe);    // Touch support
         }
+        
+        
     
         function resetSwipe() {
             swipeHandle.style.left = '12px'; // Reset to initial position
@@ -1101,11 +262,13 @@
         swipeHandle.addEventListener('touchstart', startSwipe, { passive: true }); // Updated touch support
     
         function openForm(eventId, responseType, title) {
+            currentEventId = eventId; // Store the event ID
             document.getElementById('betForm').style.display = 'block';
-            document.getElementById('questionTitle').innerText = title;
+            document.getElementById('questionTitle').innerText = title; // Set the title
             document.getElementById('event_id').value = eventId;
             setResponse(responseType);
         }
+        
     
         function closeForm() {
             document.getElementById('betForm').style.display = 'none';
@@ -1159,7 +322,7 @@
             const orderTableBody = document.getElementById('orderTableBody');
             orderTableBody.innerHTML = ''; // Clear existing rows
         
-            fetch(`/fetch-order-data/?response_type=${responseType}`)
+            fetch(`/fetch-order-data/?response_type=${responseType}&event_id=${currentEventId}`)
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(order => {
@@ -1168,6 +331,13 @@
                     });
                 })
                 .catch(error => console.error('Error fetching data:', error));
+        }
+    </script>
+    
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('open');
         }
         
     </script>
