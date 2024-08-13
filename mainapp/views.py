@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 from mainapp.forms import SignupForm, AddMoneyForm, OrderForm
-from .models import Profile, Order, Transaction, MatchOrder, CancelOrder, Category, SubCategory, Event,  SettledEvent
+from .models import Profile, Order, Transaction, MatchOrder, CancelOrder, Category, SubCategory, Event,  SettledEvent, OrderStatus
 from decimal import Decimal
 import logging
 from django.contrib import messages
@@ -70,19 +70,37 @@ def index_view(request):
 
 
 
-def lending_view(request):
+def lending(request):
     if request.user.is_authenticated:
         return redirect('index')
     return render(request, 'lending.html')
 
-# @login_required
-# def dashboard(request):
-#     profile, created = Profile.objects.get_or_create(user=request.user)
-#     orders = Order.objects.filter(user=request.user)
-#     matchorders = MatchOrder.objects.filter(user=request.user)
-#     cancelorders = CancelOrder.objects.filter(user=request.user)
+def event_active(request, event_id):
+    # Fetch the specific event
+    event = get_object_or_404(Event, id=event_id)
     
-#     return render(request, 'dashboard.html', {'profile': profile, 'orders': orders, 'matchorders': matchorders, 'cancelorders': cancelorders})
+    # Fetch orders related to the event
+    orders = Order.objects.filter(event=event,user=request.user)
+
+    # Fetch matched orders related to the event
+    match_orders = MatchOrder.objects.filter(event=event, user=request.user)
+
+    # Fetch canceled orders related to the event
+    cancel_orders = CancelOrder.objects.filter(event=event, user=request.user)
+    
+    # Render the event_active.html template with the event and grouped events data
+    return render(request, 'event_active.html', {
+        'event': event,
+        'orders': orders,
+        'match_orders': match_orders,
+        'cancel_orders': cancel_orders,
+    })
+
+def event_closed(request, event_id):
+    event = get_object_or_404(Event, id=event_id)  # Fetch the event object
+    # Add any additional logic you need here
+    return render(request, 'event_closed.html', {'event': event})
+
 
 from collections import defaultdict
 
@@ -108,7 +126,8 @@ def dashboard(request):
 
     return render(request, 'dashboard.html', {
         'profile': profile, 
-        'grouped_events': dict(grouped_events)
+        'grouped_events': dict(grouped_events),
+        'cancelorders': cancelorders
     })
 
 
@@ -127,6 +146,7 @@ def add_money(request):
     else:
         form = AddMoneyForm()
     return render(request, 'addmoney.html', {'form': form})
+
 
 @login_required
 def place_order(request):
@@ -153,6 +173,23 @@ def place_order(request):
                 profile.save()
                 Transaction.objects.create(user=request.user, profile=profile, amount=order.total_price, transaction_type='debit')
                 order.save()
+
+                # Create or update OrderStatus object
+                order_status, created = OrderStatus.objects.update_or_create(
+                    user=order.user,
+                    event=order.event,
+                    defaults={
+                        'response': order.response,
+                        'quantity': order.quantity,
+                        'price_per_quantity': order.price_per_quantity,
+                        'total_price': order.total_price,
+                        'matched_quantity': order.matched_quantity,
+                        'cancelled_quantity': 0,  # Initialize cancelled_quantity to 0
+                        'status': order.status,
+                        'timestamp': order.timestamp
+                    }
+                )
+
                 match_order(order)
                 return redirect('dashboard')
             else:
@@ -219,6 +256,24 @@ def match_order(order):
             
             opposite_order.save()
             
+            # Update OrderStatus object
+            OrderStatus.objects.filter(
+                user=order.user,
+                event=order.event
+            ).update(
+                matched_quantity=order_matched_quantity,
+                status='partial' if order_quantity > 0 else 'matched'
+            )
+            
+            # Update OrderStatus for the opposite order
+            OrderStatus.objects.filter(
+                user=opposite_order.user,
+                event=opposite_order.event
+            ).update(
+                matched_quantity=opposite_order.matched_quantity,
+                status='partial' if opposite_order.quantity > 0 else 'matched'
+            )
+
             # Check for existing entries in MatchOrder and update or create a new one
             match_order, created = MatchOrder.objects.get_or_create(
                 user=order.user,
@@ -268,55 +323,6 @@ def match_order(order):
         order.delete()  # Ensure the completed order is removed from the Order table
 
 
-# @login_required
-# def cancel_order(request, order_id):
-#     try:
-#         # Retrieve the order and ensure it's associated with the current user
-#         order = get_object_or_404(Order, id=order_id, user=request.user)
-
-#         # Check if the order is still pending
-#         if order.status == 'pending':
-#             # Refund the order amount to the user's balance
-#             profile = get_object_or_404(Profile, user=request.user)
-#             profile.balance = Decimal(profile.balance or '0.00')  # Ensure it's a Decimal
-#             profile.balance += order.total_price  # Ensure total_price is Decimal
-#             profile.save()
-
-#             # Record the transaction
-#             Transaction.objects.create(
-#                 user=request.user,
-#                 profile=profile,
-#                 amount=order.total_price,
-#                 transaction_type='refund'
-#             )
-
-#             # Mark the order as cancelled
-#             order.status = 'cancelled'
-#             order.delete()
-
-#             # Save the cancelled order in the CancelOrder table
-#             CancelOrder.objects.create(
-#                 user=request.user,
-#                 event=order.event,
-#                 response='yes',  # or set it based on your logic
-#                 cancel_quantity=order.quantity,
-#                 price_per_quantity=order.price_per_quantity,
-#                 total_cancel_price=order.total_price
-#             )
-
-#             messages.success(request, 'Order cancelled successfully.')
-#         else:
-#             messages.error(request, 'Only pending orders can be cancelled.')
-
-#     except ObjectDoesNotExist:
-#         messages.error(request, 'Order does not exist.')
-
-#     return redirect('dashboard')
-
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.contrib import messages
-
 @login_required
 def cancel_order(request, order_id):
     if request.method == 'POST':  # Ensure this view only handles POST requests
@@ -342,13 +348,22 @@ def cancel_order(request, order_id):
 
                 # Mark the order as cancelled
                 order.status = 'cancelled'
-                order.delete()
+                order.save()
+
+                # Update the OrderStatus object
+                OrderStatus.objects.filter(
+                    user=order.user,
+                    event=order.event
+                ).update(
+                    cancelled_quantity=order.quantity,
+                    status='cancelled'
+                )
 
                 # Save the cancelled order in the CancelOrder table
                 CancelOrder.objects.create(
                     user=request.user,
                     event=order.event,
-                    response='yes',  # or set it based on your logic
+                    response=order.response,
                     cancel_quantity=order.quantity,
                     price_per_quantity=order.price_per_quantity,
                     total_cancel_price=order.total_price
@@ -373,10 +388,6 @@ def cancel_order(request, order_id):
         return JsonResponse(response)
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
-
-
-
-
 
 
 @login_required

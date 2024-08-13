@@ -1,0 +1,444 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Active Event</title>
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                background-color: #ffffff;
+                color: #00796b;
+            }
+
+            .container {
+                width: 480px;
+                margin: 0 auto;
+                padding: 20px;
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                min-height: calc(100vh - 40px);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #e0e0e0;
+            }
+
+            .icon {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 10px;
+            }
+
+            .header p {
+                font-size: 16px;
+                color: #333;
+                margin: 0;
+                font-weight: 500;
+            }
+
+            .probability {
+                font-size: 14px;
+                color: #616161;
+                margin-top: 5px;
+                font-weight: 600;
+            }
+
+            .probability-value {
+                color: #00796b;
+                font-size: 20px;
+                font-weight: 700;
+            }
+
+            .card {
+                background-color: #f9f9f9;
+                border-radius: 12px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            }
+
+            .values {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 15px;
+            }
+
+            .values div {
+                text-align: center;
+            }
+
+            .label {
+                font-size: 18px;
+                font-weight: 700;
+                color: #333;
+                margin: 0;
+            }
+
+            .sub-label {
+                font-size: 12px;
+                color: #888;
+                margin-top: 4px;
+            }
+
+            .actions {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 15px;
+            }
+
+            .actions button {
+                flex: 1;
+                padding: 12px;
+                border-radius: 25px;
+                border: none;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+                box-sizing: border-box;
+                outline: none;
+            }
+
+            .invest {
+                background-color: #ffffff;
+                color: #00796b;
+                border: 2px solid #00796b;
+                margin-right: 10px;
+            }
+
+            .invest:hover {
+                background-color: #f1f8f4;
+            }
+
+            .exit {
+                background-color: #00796b;
+                color: #ffffff;
+            }
+
+            .exit:hover {
+                background-color: #004d40;
+            }
+
+            .exited-returns {
+                text-align: center;
+                font-size: 14px;
+                color: #757575;
+                margin-top: 15px;
+            }
+
+            .tabs {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 20px;
+                border-top: 2px solid #e0e0e0;
+                padding-top: 10px;
+            }
+
+            .tab {
+                background-color: transparent;
+                border: none;
+                padding: 8px 0;
+                cursor: pointer;
+                color: #555;
+                font-weight: 600;
+                border-bottom: 3px solid transparent;
+                transition: all 0.3s ease;
+                flex-grow: 1;
+                text-align: center;
+                font-size: 14px;
+                box-sizing: border-box;
+                outline: none;
+            }
+
+            .tab.active {
+                border-bottom: 3px solid #00796b;
+                color: #00796b;
+            }
+
+            .transaction-list {
+                margin-top: 20px;
+            }
+
+            .transaction {
+                display: none; /* Control visibility through JavaScript or CSS based on tab selection */
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                margin-top: 10px;
+                transition: transform 0.3s ease;
+                position: relative; /* Position relative for badge positioning */
+            }
+            
+            .badge_match {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background-color: #349d3c;
+                color: #fff;
+                padding: 4px 8px;
+                border-radius: 3px;
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .badge_cancel {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background-color: #cf0026;
+                color: #fff;
+                padding: 4px 8px;
+                border-radius: 3px;
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background-color: #007bff;
+                color: #fff;
+                padding: 4px 8px;
+                border-radius: 3px;
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+        
+
+            
+
+            .transaction.active {
+                display: flex;
+            }
+
+            
+
+            .transaction-details {
+                display: flex;
+                align-items: center;
+            }
+
+            .status {
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 13px;
+                margin-right: 10px;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            .status.no {
+                background-color: #e57373;
+                color: #ffffff;
+            }
+
+            .status.yes {
+                background-color: #4caf50;
+                color: #ffffff;
+            }
+
+            .view-details-btn {
+                color: #ffffff;
+                font-size: 15px;
+                cursor: pointer;
+                padding: 10px 18px;
+                border-radius: 25px;
+                border: 2px solid #00796b;
+                background-color: #00796b;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            .view-details-btn:hover {
+                background-color: #004d40;
+                border-color: #004d40;
+            }
+
+            .cancel-btn{
+                color: #ffffff;
+                font-size: 15px;
+                cursor: pointer;
+                padding: 10px 18px;
+                border-radius: 25px;
+                
+                background-color: #ff3a5f;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            .cancel-btn:hover {
+                background-color: #ff3a5f
+                border-color: #004d40;
+            }
+            
+
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="header">
+                <img src="{{ event.icon.url }}" alt="{{ event.title }}" class="icon">
+                <p>{{ event.title }}</p>
+                {% comment %} <p class="probability">PROBABILITY OF YES <span class="probability-value">85.00%</span></p> {% endcomment %}
+            </div>
+            
+            <div class="card">
+                <div class="values">
+                    <div>
+                        <p class="label">₹0.50</p>
+                        <p class="sub-label">Invested</p>
+                    </div>
+                    <div>
+                        <p class="label">₹1.50</p>
+                        <p class="sub-label">Current value</p>
+                    </div>
+                    <div>
+                        <p class="label">₹1.00</p>
+                        <p class="sub-label">Live returns</p>
+                    </div>
+                </div>
+                    {% comment %} <div class="actions">
+                        <button class="invest">Invest</button>
+                        <button class="exit">Exit</button>
+                    </div> {% endcomment %}
+                {% comment %} <div class="exited-returns">⏤ Exited returns ⏤</div> {% endcomment %}
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('all')">All</button>
+                <button class="tab" onclick="showTab('pending')">Pending</button>
+                <button class="tab" onclick="showTab('matched')">Matched</button>
+                {% comment %} <button class="tab" onclick="showTab('exited')">Exited</button> {% endcomment %}
+                <button class="tab" onclick="showTab('cancelled')">Cancelled</button>
+            </div>
+            
+            <div class="transaction-list">
+                {% for order in orders %}
+                <div class="transaction all pending">
+                    <div class="badge">Pending</div>
+                    <div class="transaction-details">
+                        <div class="status {{ order.response }}">{{ order.response }}</div>
+                        <div>
+                            <p class="quantity-price">Quantity: {{ order.quantity }} @ ₹{{ order.price_per_quantity }} each</p>
+                            <p class="investment-gain">Investment: ₹{{ order.investment }} | Gain: ₹{{ order.gain }}</p>
+                        </div>
+                    </div>
+                    {% if order.status == "pending" %}
+                    <button class="cancel-btn" data-order-id="{{ order.id }}">Cancel</button>
+                    {% endif %}
+                </div>
+                {% endfor %}    
+                
+                {% for match_order in match_orders %}
+                <div class="transaction all matched">
+                    <div class="badge_match">Matched</div>
+                    <div class="transaction-details">
+                        <div class="status {{ match_order.response }}">{{ match_order.response }}</div>
+                        <div>
+                            <p class="quantity-price">Quantity: {{ match_order.match_quantity }} @ ₹{{ match_order.price_per_quantity }} each</p>
+                            <p class="investment-gain">Investment: ₹{{ match_order.investment }} | Gain: ₹{{ match_order.gain }}</p>
+                        </div>
+                    </div>
+                    {% comment %} <button class="view-details">View Details</button> {% endcomment %}
+                </div>
+                {% endfor %}
+                
+                {% for cancel_order in cancel_orders %}
+                <div class="transaction all cancelled">
+                        <div class="badge_cancel">Cancelled</div>
+                    <div class="transaction-details">
+                        <div class="status {{ cancel_order.response }}">{{ cancel_order.response }}</div>
+                        <div>
+                            <p class="quantity-price">Quantity: {{ cancel_order.cancel_quantity }} @ ₹{{ cancel_order.price_per_quantity }} each</p>
+                            <p class="investment-gain">Investment: ₹{{ cancel_order.investment }} | Gain: ₹{{ cancel_order.gain }}</p>
+                        </div>
+                    </div>
+                    {% comment %} <button class="view-details">View Details</button> {% endcomment %}
+                </div>
+                {% endfor %}
+                
+                {% comment %} <div class="transaction all exited">
+                    <div class="badge">Exited</div>
+                    <div class="transaction-details">
+                        <div class="status no">No</div>
+                        <div>
+                            <p class="quantity-price">Quantity: 1 @ ₹1.0 each</p>
+                            <p class="investment-gain">Investment: ₹1.0 | Gain: ₹1.0</p>
+                        </div>
+                    </div>
+                    <button class="view-details">View Details</button>
+                </div> {% endcomment %}
+            </div>
+            
+            
+        </div>
+
+        <script>
+            function showTab(tabName) {
+                const tabs = document.querySelectorAll('.tab');
+                const transactions = document.querySelectorAll('.transaction');
+
+                tabs.forEach(tab => tab.classList.remove('active'));
+                transactions.forEach(transaction => transaction.classList.remove('active'));
+
+                document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
+                document.querySelectorAll(`.transaction.${tabName}`).forEach(transaction => transaction.classList.add('active'));
+            }
+
+            // Initialize with 'all' tab selected
+            document.addEventListener('DOMContentLoaded', () => {
+                showTab('all');
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('.cancel-btn').forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        const orderId = this.getAttribute('data-order-id');
+            
+                        // Send AJAX POST request to cancel the order
+                        fetch("{% url 'cancel_order' order_id=0 %}".replace('0', orderId), {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({}),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                // Optionally, remove the cancelled order from the DOM
+                                button.closest('.transaction').remove();
+                            }
+                            // Handle errors if needed
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            // Handle errors if needed
+                        });
+                    });
+                });
+            });
+        </script>
+            
+
+    </body>
+    </html>

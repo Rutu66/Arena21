@@ -12,11 +12,16 @@ urlpatterns = [
     path('index/', index_view, name='index'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-    path('', lending_view, name='lending'),
+    path('', lending, name='lending'),
+    path('event_active/<int:event_id>/', event_active, name='event_active'),
+    path('event_closed/', event_closed, name='event_closed'),
+    path('event_closed/<int:event_id>/', event_closed, name='event_closed'),
+     
     path('dashboard/', dashboard, name='dashboard'),
     path('add_money/', add_money, name='add_money'),
     path('place_order/', place_order, name='place_order'),
     path('cancel_order/<int:order_id>/', cancel_order, name='cancel_order'),
+
     path('settle_event/<int:event_id>/<str:settle_response>/', settle_event, name='settle_event'),
     path('fetch-order-data/', fetch_order_data, name='fetch_order_data'),
     

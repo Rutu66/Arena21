@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <style>
+        /* Modern Portfolio Dashboard Design */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            color: #00796b;
+        }
+
+        
+        .container {
+            width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-height: calc(100vh - 40px); /* Subtract padding (20px top and 20px bottom) */
+            display: flex;
+            flex-direction: column;
+            
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        header h2 {
+            margin: 0;
+            color: #333;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .tab.active {
+            background-color: #fff;
+            border-bottom: none;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .portfolio-overview {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .portfolio-item {
+            text-align: center;
+        }
+
+        .portfolio-item h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .portfolio-item p {
+            font-size: 1.5em;
+            color: #28a745;
+            margin: 10px 0 0;
+        }
+
+        .orders-section h4 {
+            margin-top: 20px;
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .orders-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s;
+        }
+
+        .order-item:hover {
+            background-color: #f0f2f5;
+        }
+
+        .order-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .order-details>span {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .quantity {
+            text-align: right;
+            font-size: 13px;
+        }
+
+        .status {
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .cancel-btn {
+            flex: 0;
+            margin-left: 10px;
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .no-trades {
+            text-align: center;
+            margin-top: 50px;
+            color: #666;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .no-trades img {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h2>Dashboard</h2>
+        </header>
+
+        <!-- Tabs Section -->
+        <div class="tabs">
+            <div class="tab active" data-tab="active-trades">Active Trades</div>
+            <div class="tab" data-tab="closed-trades">Closed Trades</div>
+        </div>
+
+        <!-- Active Trades Content -->
+        <div id="active-trades" class="tab-content active">
+
+            <div class="portfolio-overview">
+                <div class="portfolio-item">
+                    <h3>Investment</h3>
+                    <p>{{ portfolio.investment }}</p>
+                </div>
+                <div class="portfolio-item">
+                    <h3>Returns</h3>
+                    <p>{{ portfolio.returns }}</p>
+                </div>
+            </div>
+
+            {% csrf_token %}
+            {% for event, data in grouped_events.items %}
+            <section class="event-section">
+                <h3>{{ event }}</h3>
+                
+                <!-- Your Orders for this Event -->
+                <h4>Your Orders</h4>
+                <ul class="orders-list">
+                    {% for order in data.orders %}
+                        <li class="order-item" data-order-id="{{ order.id }}">
+                            <div class="order-details">
+                                <span class="response">{{ order.response }}</span>
+                                <span class="quantity">{{ order.quantity }} @ {{ order.price_per_quantity }} each</span>
+                                <span class="status">{{ order.status }}</span>
+                                {% if order.status == "pending" %}
+                                    <button class="btn btn-danger cancel-btn" data-order-id="{{ order.id }}">Cancel</button>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Match Orders for this Event -->
+                <h4>Match Orders</h4>
+                <ul class="orders-list">
+                    {% for matchorder in data.matchorders %}
+                        <li class="order-item">
+                            <div class="order-details">
+                                <span class="response">{{ matchorder.response }}</span>
+                                <span class="quantity">{{ matchorder.match_quantity }} @ {{ matchorder.price_per_quantity }} each</span>
+                                <span class="status">{{ matchorder.status }}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Cancel Orders for this Event -->
+                <h4>Cancel Orders</h4>
+                <ul class="orders-list">
+                    {% for cancelorder in data.cancelorders %}
+                        <li class="order-item">
+                            <div class="order-details">
+                                <span class="response">{{ cancelorder.response }}</span>
+                                <span class="quantity">{{ cancelorder.cancel_quantity }} @ {{ cancelorder.price_per_quantity }} each</span>
+                                <span class="status">{{ cancelorder.status }}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endfor %}
+
+
+            <div class="no-trades">
+                <img src="your-image-path" alt="No trades image" width="200">
+                <p>Nothing to see here... yet</p>
+                <small>Your active trades will appear here</small>
+            </div>
+
+        </div>
+
+        
+
+        <!-- Closed Trades Content -->
+        <div id="closed-trades" class="tab-content">
+            <div class="portfolio-overview">
+                <div class="portfolio-item">
+                    <h3>Investment</h3>
+                    <p>{{ portfolio.investment }}</p>
+                </div>
+                <div class="portfolio-item">
+                    <h3>Returns</h3>
+                    <p>{{ portfolio.returns }}</p>
+                </div>
+            </div>
+
+            <!-- Your Orders for this Event -->
+            <h4>Your Orders</h4>
+            <ul class="orders-list">
+                {% for order in closed_orders %}
+                <li class="order-item" data-order-id="{{ order.id }}">
+                    <div class="order-details">
+                        <span class="response">{{ order.response }}</span>
+                        <span class="quantity">{{ order.quantity }} @ {{ order.price_per_quantity }} each</span>
+                        <span class="status">{{ order.status }}</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Include jQuery if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.tab').click(function () {
+                var tab_id = $(this).attr('data-tab');
+
+                // Remove 'active' class from all tabs and contents
+                $('.tab').removeClass('active');
+                $('.tab-content').removeClass('active');
+
+                // Add 'active' class to the clicked tab and corresponding content
+                $(this).addClass('active');
+                $("#" + tab_id).addClass('active');
+            });
+
+            $('.cancel-btn').click(function(event) {
+                event.preventDefault(); // Prevent default button behavior
+
+                var button = $(this);
+                var orderId = button.data('order-id'); // Get the order ID
+
+                $.ajax({
+                    url: '/cancel_order/' + orderId + '/', // URL for Django view
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(), // CSRF token
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Remove the order item from the UI without showing any message
+                            button.closest('.order-item').remove();
+                        }
+                        // No messages or additional actions
+                    }
+                    // No error or complete functions
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

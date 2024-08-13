@@ -81,6 +81,25 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.event.title} - {self.response}"
     
+class OrderStatus(models.Model):
+    RESPONSE_CHOICES = [
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    response = models.CharField(max_length=3, choices=RESPONSE_CHOICES)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    price_per_quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, editable=False)  # Make this field non-editable
+    matched_quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    cancelled_quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    status = models.CharField(max_length=20, default='pending')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+
+    
 
     
 class MatchOrder(models.Model):
