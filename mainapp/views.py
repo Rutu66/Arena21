@@ -49,23 +49,47 @@ def login_view(request):
 
 @login_required
 def index_view(request):
+    # Ensure profile exists or create it if not
     profile, created = Profile.objects.get_or_create(user=request.user)
 
+    # Fetch categories, subcategories, and events
     categories = Category.objects.all()
     subcategories = SubCategory.objects.all()
     events = Event.objects.all()
+
+    # Fetch orders for the current user
+    orders = Order.objects.filter(user=request.user)
+
+    price_per_quantity_yes = defaultdict(list)
+    price_per_quantity_no = defaultdict(list)
+
+    # Populate the dictionaries with price per quantity values
+    for order in orders:
+        if order.response == 'yes':
+            price_per_quantity_yes[order.event.id].append(order.price_per_quantity)
+        elif order.response == 'no':
+            price_per_quantity_no[order.event.id].append(order.price_per_quantity)
+
+    # Find the maximum price per quantity for each event ID
+    max_price_per_quantity_yes = {event_id: max(prices, default=None) for event_id, prices in price_per_quantity_yes.items()}
+    max_price_per_quantity_no = {event_id: max(prices, default=None) for event_id, prices in price_per_quantity_no.items()}
     
-    
-            
-            
     context = {
         'categories': categories,
         'subcategories': subcategories,
         'events': events,
-        'profile':profile,
-        
+        'profile': profile,
+        'max_price_per_quantity_yes': max_price_per_quantity_yes,
+        'max_price_per_quantity_no': max_price_per_quantity_no        
     }
+
     return render(request, 'index.html', context)
+
+
+
+
+
+
 
 
 
@@ -369,9 +393,12 @@ def cancel_order(request, order_id):
                     total_cancel_price=order.total_price
                 )
 
+                # Delete the order record
+                order.delete()
+
                 response = {
                     'status': 'success',
-                    'message': 'Order cancelled successfully.'
+                    'message': 'Order cancelled and deleted successfully.'
                 }
             else:
                 response = {
@@ -431,10 +458,7 @@ def fetch_order_data(request):
     response_type = request.GET.get('response_type', None)
     event_id = request.GET.get('event_id', None)
     
-    print("*******************************************************")
-    print(f"response_type: {response_type}")
-    print(f"event_id: {event_id}")
-    print("******************************************************")
+    
     
     # Validate event_id
     if not event_id:

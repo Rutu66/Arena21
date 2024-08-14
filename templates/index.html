@@ -70,7 +70,7 @@
         </section>
 
         <!-- Events Section -->
-        <section class="events">
+        {% comment %} <section class="events">
             {% for event in events %}
             <div class="question-card">
                 <div class="logo">
@@ -86,7 +86,43 @@
                 </div>
             </div>
             {% endfor %}
-        </section>
+        </section> {% endcomment %}
+        <section class="events">
+    {% for event in events %}
+    <div class="question-card">
+        <div class="logo">
+            <img src="{{ event.icon.url }}" alt="{{ event.name }}">
+        </div>
+        <div class="content">
+            <h3>{{ event.title }}</h3>
+            <h4>{{ event.description }}</h4>
+            <div class="actions">
+                {% with event_id=event.id %}
+                <button class="yes" onclick="openForm('{{ event_id }}', 'yes', '{{ event.title }}')">
+                    Yes 
+                    {% for id, price in max_price_per_quantity_yes.items %}
+                        {% if id == event_id %}
+                            ₹{{ price }}
+                        {% endif %}
+                    {% endfor %}
+                </button>
+                <button class="no" onclick="openForm('{{ event_id }}', 'no', '{{ event.title }}')">
+                    No 
+                    {% for id, price in max_price_per_quantity_no.items %}
+                        {% if id == event_id %}
+                            ₹{{ price }}
+                        {% endif %}
+                    {% endfor %}
+                </button>
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+
+        
     </div>
 
 <div id="menu" class="menu">
