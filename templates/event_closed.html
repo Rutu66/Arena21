@@ -13,8 +13,8 @@
             background-color: #ffffff;
             color: #00796b;
         }
-
-        .container {
+        
+        .closed-container {
             width: 480px;
             margin: 0 auto;
             padding: 20px;
@@ -25,67 +25,65 @@
             display: flex;
             flex-direction: column;
         }
-
-        .header {
+        
+        .closed-header {
             text-align: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid #e0e0e0;
         }
-
-        .crypto-icon {
+        
+        .closed-crypto-icon {
             width: 40px;
             height: 40px;
             margin-bottom: 10px;
         }
-
-        .header p {
+        
+        .closed-header p {
             font-size: 16px;
             color: #333;
             margin: 0;
             font-weight: 500;
         }
-
         
-
-        .card {
+        .closed-card {
             background-color: #f9f9f9;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
-
-        .values {
+        
+        .closed-values {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
         }
-
-        .values div {
+        
+        .closed-values div {
             text-align: center;
         }
-
-        .label {
+        
+        .closed-label {
             font-size: 18px;
             font-weight: 700;
             color: #333;
             margin: 0;
         }
-
-        .sub-label {
+        
+        .closed-sub-label {
             font-size: 12px;
             color: #888;
             margin-top: 4px;
         }
-
-        .actions {
+        
+        .closed-actions {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
         }
-
-        .actions button {
+        
+        .closed-actions button {
             flex: 1;
             padding: 12px;
             border-radius: 25px;
@@ -97,18 +95,16 @@
             box-sizing: border-box;
             outline: none;
         }
-
-
-
-        .tabs {
+        
+        .closed-tabs {
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
             border-top: 2px solid #e0e0e0;
             padding-top: 10px;
         }
-
-        .tab {
+        
+        .closed-tab {
             background-color: transparent;
             border: none;
             padding: 8px 0;
@@ -123,17 +119,17 @@
             box-sizing: border-box;
             outline: none;
         }
-
-        .tab.active {
+        
+        .closed-tab.active {
             border-bottom: 3px solid #00796b;
             color: #00796b;
         }
-
-        .transaction-list {
+        
+        .closed-transaction-list {
             margin-top: 20px;
         }
-
-        .transaction {
+        
+        .closed-transaction {
             display: none;
             justify-content: space-between;
             align-items: center;
@@ -144,21 +140,21 @@
             margin-top: 10px;
             transition: transform 0.3s ease;
         }
-
-        .transaction.active {
+        
+        .closed-transaction.active {
             display: flex;
         }
-
-        .transaction:hover {
+        
+        .closed-transaction:hover {
             transform: translateY(-3px);
         }
-
-        .transaction-details {
+        
+        .closed-transaction-details {
             display: flex;
             align-items: center;
         }
-
-        .status {
+        
+        .closed-status {
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 13px;
@@ -166,13 +162,13 @@
             font-weight: 600;
             white-space: nowrap;
         }
-
-        .status.no {
+        
+        .closed-status.no {
             background-color: #e57373;
             color: #ffffff;
         }
-
-        .view-details {
+        
+        .closed-view-details {
             color: #ffffff;
             font-size: 15px;
             cursor: pointer;
@@ -182,8 +178,8 @@
             background-color: #00796b;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
-        .view-details:hover {
+        
+        .closed-view-details:hover {
             background-color: #004d40;
             border-color: #004d40;
         }
@@ -191,85 +187,81 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <img src="bitcoin-icon.png" alt="Bitcoin" class="crypto-icon">
+    <div class="closed-container">
+        <div class="closed-header">
+            <img src="bitcoin-icon.png" alt="Bitcoin" class="closed-crypto-icon">
             <p>Bitcoin to be priced at 58221.02 USDT or more at 03:20 PM?</p>
-            
         </div>
         
-        <div class="card">
-            <div class="values">
+        <div class="closed-card">
+            <div class="closed-values">
                 <div>
-                    <p class="label">₹0.50</p>
-                    <p class="sub-label">Invested</p>
+                    <p class="closed-label">₹0.50</p>
+                    <p class="closed-sub-label">Invested</p>
                 </div>
                 <div>
-                    <p class="label">₹1.50</p>
-                    <p class="sub-label">Settled returns
-                    </p>
+                    <p class="closed-label">₹1.50</p>
+                    <p class="closed-sub-label">Settled returns</p>
                 </div>
                 <div>
-                    <p class="label">₹1.00</p>
-                    <p class="sub-label">returns</p>
+                    <p class="closed-label">₹1.00</p>
+                    <p class="closed-sub-label">returns</p>
                 </div>
             </div>
-            
         </div>
 
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('all')">All</button>
-            <button class="tab" onclick="showTab('Settled')">Settled</button>
-            <button class="tab" onclick="showTab('Cancelled')">Cancelled</button>
-            
+        <div class="closed-tabs">
+            <button class="closed-tab active" onclick="showTab('all')">All</button>
+            <button class="closed-tab" onclick="showTab('Settled')">Settled</button>
+            <button class="closed-tab" onclick="showTab('Cancelled')">Cancelled</button>
         </div>
 
-        <div class="transaction-list">
-            <div class="transaction all pending">
-                <div class="transaction-details">
-                    <div class="status no">No</div>
+        <div class="closed-transaction-list">
+            <div class="closed-transaction all pending">
+                <div class="closed-transaction-details">
+                    <div class="closed-status no">No</div>
                     <div>
                         <p class="investment">₹0.5</p>
                         <p class="current-value">Investment</p>
                     </div>
                 </div>
-                <button class="view-details">Exit</button>
+                <button class="closed-view-details">Exit</button>
             </div>
 
-            <div class="transaction all matched">
-                <div class="transaction-details">
-                    <div class="status no">No</div>
+            <div class="closed-transaction all matched">
+                <div class="closed-transaction-details">
+                    <div class="closed-status no">No</div>
                     <div>
                         <p class="investment">₹0.8</p>
                         <p class="current-value">Investment</p>
                     </div>
                 </div>
-                <button class="view-details">Exit</button>
+                <button class="closed-view-details">Exit</button>
             </div>
 
-            <div class="transaction all exited">
-                <div class="transaction-details">
-                    <div class="status no">No</div>
+            <div class="closed-transaction all exited">
+                <div class="closed-transaction-details">
+                    <div class="closed-status no">No</div>
                     <div>
                         <p class="investment">₹1.0</p>
                         <p class="current-value">Investment</p>
                     </div>
                 </div>
-                <button class="view-details">Exit</button>
+                <button class="closed-view-details">Exit</button>
             </div>
         </div>
     </div>
 
     <script>
         function showTab(tabName) {
-            const tabs = document.querySelectorAll('.tab');
-            const transactions = document.querySelectorAll('.transaction');
+            const tabs = document.querySelectorAll('.closed-tab');
+            const transactions = document.querySelectorAll('.closed-transaction');
 
             tabs.forEach(tab => tab.classList.remove('active'));
             transactions.forEach(transaction => transaction.classList.remove('active'));
 
-            document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
-            document.querySelectorAll(`.transaction.${tabName}`).forEach(transaction => transaction.classList.add('active'));
+            document.querySelector(`.closed-tab[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.querySelectorAll(`.closed-transaction.${tabName}`).forEach(transaction => transaction.classList.add('active'));
         }
 
         // Initialize with 'all' tab selected
@@ -279,4 +271,5 @@
     </script>
 
 </body>
+
 </html>

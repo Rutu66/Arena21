@@ -1,258 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #ffffff;
-            color: #00796b;
-        }
+{% block title %}Dashboard - Responsive UI{% endblock %}
 
-        .container {
-            width: 480px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            min-height: calc(100vh - 40px); /* Subtract padding (20px top and 20px bottom) */
-            display: flex;
-            flex-direction: column;
-            
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #00796b;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 14px 0;
-            text-align: center;
-            cursor: pointer;
-            color: #00796b;
-            font-weight: 600;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            font-size: 18px;
-            background: #f5f5f5;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .tab.active {
-            color: #ffffff;
-            border-bottom: 3px solid #00796b;
-            background: #00796b;
-        }
-
-        .trade-info {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .trade-info .current-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #00796b;
-            margin-bottom: 15px;
-        }
-
-        .trade-info .details {
-            display: flex;
-            justify-content: space-between;
-            font-size: 16px;
-            color: #555;
-        }
-
-        .trade-card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border: 1px solid #e0e0e0;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            text-decoration: none;
-        }
-        
-        
-        .trade-card .info {
-            display: flex;
-            align-items: center;
-            max-width: 70%;
-        }
-        
-        .trade-card .info .badge-logo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Center the badge and logo */
-            margin-right: 15px; /* Space between logo and text */
-        }
-        
-        .trade-card .info img {
-            width: 55px;
-            height: 55px;
-        }
-        
-        .trade-card .info .text {
-            font-size: 15px;
-            color: #333;
-            text-align: left;
-            margin-top: 15px;
-        }
-        
-        .trade-card .info .invested {
-            font-size: 13px;
-            color: #757575;
-            margin-top: 5px;
-        }
-        
-
-        .trade-card .btn {
-            color: #ffffff;
-            font-size: 15px;
-            cursor: pointer;
-            padding: 10px 18px;
-            border-radius: 25px;
-            border: 2px solid #00796b;
-            background-color: #00796b;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .trade-card .btn:hover {
-            background-color: #004d40;
-            border-color: #004d40;
-        }
-        
-
-        .content {
-            display: none;
-        }
-
-        .content.active {
-            display: block;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <div class="tabs">
-            <div class="tab active" onclick="openTab('activeTrades')">Active Trades</div>
-            <div class="tab" onclick="openTab('closedTrades')">Closed Trades</div>
+{% block content %}
+    <div class="event-container">
+        <div class="dash-tabs">
+            <div class="dash-tab active" onclick="openTab('activeTrades', event)">Active Trades</div>
+            <div class="dash-tab" onclick="openTab('closedTrades', event)">Closed Trades</div>
         </div>
 
         <!-- Content for Active Trades -->
-        <div id="activeTrades" class="content active">
-            <div class="trade-info">
-                <div class="current-value">₹0.5</div>
-                <div class="details">
+        <div id="activeTrades" class="dash-content active">
+            <div class="dash-trade-info">
+                <div class="dash-current-value">₹0.5</div>
+                <div class="dash-details">
                     <span>₹0.5 Investment</span>
                     <span>₹0 Live Gains</span>
                 </div>
             </div>
 
             {% for event, event_data in grouped_events.items %}
-            <div class="trade-card">
-                <div class="info">
-                    <div class="badge-logo-container">
-                        
-                        <img src="{{ event.icon.url }}" alt="{{ event.title }}" class="icon">
+            <div class="dash-trade-card">
+                <div class="dash-info">
+                    <div class="dash-badge-logo-container">
+                        <img src="{{ event.icon.url }}" alt="{{ event.title }}" class="dash-icon">
                     </div>
-                    <div class="text">
+                    <div class="dash-text">
                         {{ event.title }}
-                        <div class="invested">Invested ₹0.5 • Gains ₹0</div>
+                        <div class="dash-invested">Invested ₹0.5 • Gains ₹0</div>
                     </div>
                 </div>
-                <a href="{% url 'event_active' event.id %}" class="btn">View</a>
+                <a href="{% url 'event_active' event.id %}" class="dash-btn">View</a>
             </div>
-            
-        {% endfor %}
-        
-            
-
-        
-            
-            
-            
+            {% endfor %}
         </div>
-        
 
-    
         <!-- Content for Closed Trades -->
-    <div id="closedTrades" class="content">
-    <div class="trade-info">
-        <div class="current-value">- ₹299836.8</div>
-        <div class="details">
-            <span>₹12182256.84 Investment</span>
-            <span>₹-7400 Today's returns</span>
+        <div id="closedTrades" class="dash-content">
+            <div class="dash-trade-info">
+                <div class="dash-current-value">- ₹299836.8</div>
+                <div class="dash-details">
+                    <span>₹12182256.84 Investment</span>
+                    <span>₹-7400 Today's returns</span>
+                </div>
+            </div>
+
+           
+            {% for event in closedevents %}
+            <div class="dash-trade-card">
+                <div class="dash-info">
+                    <div class="dash-badge-logo-container">
+                        <img src="{{ event.settled_event.event.icon.url }}" alt="{{ closedevents.event.title }}" class="dash-icon">
+                    </div>
+                    <div class="dash-text">
+                        {{ event.settled_event.event.title }}
+                        <div class="dash-invested">Invested ₹0.5 • Gains ₹0</div>
+                    </div>
+                </div>
+                <a href="{% url 'event_closed' event.id %}" class="dash-btn">View</a>
+            {% endfor %} 
             
         </div>
     </div>
-    
-    {% comment %} {% for cancelorder in cancelorders %}
-    <div class="trade-card">
-        <div class="info">
-            <div class="badge-logo-container">
-                <img src="{{ cancelorder.event.icon.url }}" alt="{{ cancelorder.event.title }}" class="icon">
-            </div>
-            <div class="text">
-                {{ cancelorder.event.title }}
-                <div class="invested">Invested ₹0.5 • Gains ₹0</div>
-            </div>
-        </div>
-        <a href="{% url 'event_closed' cancelorder.event.id %}" class="btn">View</a>
-    </div>
-    {% endfor %} {% endcomment %}
 
-
-   
-</div>
-
-    </div>
-
-    <script>
-        function openTab(tabName) {
-            var i, content, tab;
-
-            // Hide all content by default
-            content = document.getElementsByClassName("content");
-            for (i = 0; i < content.length; i++) {
-                content[i].classList.remove("active");
-            }
-
-            // Remove the active class from all tabs
-            tab = document.getElementsByClassName("tab");
-            for (i = 0; i < tab.length; i++) {
-                tab[i].classList.remove("active");
-            }
-
-            // Show the specific tab content
-            document.getElementById(tabName).classList.add("active");
-
-            // Add active class to the tab that was clicked
-            event.currentTarget.classList.add("active");
-        }
-    </script>
-</body>
-
-</html>
+{% endblock %}

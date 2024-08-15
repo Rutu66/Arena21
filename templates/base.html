@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Responsive UI{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <header class="header"> 
+        <div class="profile">
+            <img src="https://via.placeholder.com/50" alt="User Profile">
+            <div class="greeting">
+                <h1>Welcome Back! {{ request.user }}</h1>
+                <p>Here are the latest Events...</p>
+            </div>
+        </div>
+        <div class="menu-button" onclick="toggleMenu()">☰</div>
+    </header>
+
+    <main class="container">
+        {% block content %}
+        <!-- Page specific content will be inserted here -->
+        {% endblock %}
+    </main>
+
+    <div class="bottom-nav-container">
+        <div class="nav-item">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'images/home.svg' %}" alt="Home Icon">
+                <span>Home</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{% url 'dashboard' %}">
+                <img src="{% static 'images/portfolio.svg' %}" alt="Portfolio Icon">
+                <span>Portfolio</span>
+            </a>
+        </div>
+    </div>
+    
+
+    <div id="menu" class="menu">
+        <div class="menu-header">
+            <div class="user-details">
+                <img src="profile-pic-url" alt="Profile Picture" class="profile-pic">
+                <div class="user-info">
+                    <span class="username">John Doe</span>
+                    <p class="user-handle">@johndoe</p>
+                </div>
+            </div>
+            <span class="close-button" onclick="toggleMenu()">✖</span>
+        </div>
+        <ul class="menu-items">
+            <li><a href="#"><i class="icon-profile"></i>Profile</a></li>
+            <li><a href="#"><i class="icon-dashboard"></i>Dashboard</a></li>
+            <li><a href="#"><i class="icon-portfolio"></i>Portfolio</a></li>
+            <li class="logout"><a href="#"><i class="icon-logout"></i>Logout</a></li>
+        </ul>
+    </div>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+
+</html>

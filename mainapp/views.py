@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 from mainapp.forms import SignupForm, AddMoneyForm, OrderForm
-from .models import Profile, Order, Transaction, MatchOrder, CancelOrder, Category, SubCategory, Event,  SettledEvent, OrderStatus
+from .models import Profile, Order, Transaction, MatchOrder, CancelOrder, Category, SubCategory, Event,  SettledEvent, OrderStatus, ClosedEvent
 from decimal import Decimal
 import logging
 from django.contrib import messages
@@ -102,6 +102,8 @@ def lending(request):
 def event_active(request, event_id):
     # Fetch the specific event
     event = get_object_or_404(Event, id=event_id)
+    print("#######################")
+    print(event)
     
     # Fetch orders related to the event
     orders = Order.objects.filter(event=event,user=request.user)
@@ -121,9 +123,19 @@ def event_active(request, event_id):
     })
 
 def event_closed(request, event_id):
-    event = get_object_or_404(Event, id=event_id)  # Fetch the event object
-    # Add any additional logic you need here
-    return render(request, 'event_closed.html', {'event': event})
+    # Fetch the event object or return a 404 error if not found
+    event = get_object_or_404(Event, id=event_id)
+    
+    # Add any additional logic if necessary, e.g., fetching related data or checking conditions
+    
+    # Context to pass to the template
+    context = {
+        'event': event,
+        # Add more context variables here as needed
+    }
+    
+    # Render the template with the provided context
+    return render(request, 'event_closed.html', context)
 
 
 from collections import defaultdict
@@ -135,6 +147,7 @@ def dashboard(request):
     orders = Order.objects.filter(user=request.user)
     matchorders = MatchOrder.objects.filter(user=request.user)
     cancelorders = CancelOrder.objects.filter(user=request.user)
+    closedevents = ClosedEvent.objects.filter(user=request.user)
 
     # Group everything by event
     grouped_events = defaultdict(lambda: {'orders': [], 'matchorders': [], 'cancelorders': []})
@@ -151,7 +164,8 @@ def dashboard(request):
     return render(request, 'dashboard.html', {
         'profile': profile, 
         'grouped_events': dict(grouped_events),
-        'cancelorders': cancelorders
+        'cancelorders': cancelorders,
+        'closedevents' : closedevents
     })
 
 
@@ -346,10 +360,9 @@ def match_order(order):
         order.save()
         order.delete()  # Ensure the completed order is removed from the Order table
 
-
 @login_required
 def cancel_order(request, order_id):
-    if request.method == 'POST':  # Ensure this view only handles POST requests
+    if request.method == 'POST':
         try:
             # Retrieve the order and ensure it's associated with the current user
             order = get_object_or_404(Order, id=order_id, user=request.user)
@@ -370,18 +383,21 @@ def cancel_order(request, order_id):
                     transaction_type='refund'
                 )
 
-                # Mark the order as cancelled
-                order.status = 'cancelled'
-                order.save()
-
                 # Update the OrderStatus object
-                OrderStatus.objects.filter(
+                order_status = OrderStatus.objects.filter(
                     user=order.user,
                     event=order.event
-                ).update(
-                    cancelled_quantity=order.quantity,
-                    status='cancelled'
-                )
+                ).first()
+
+                if order_status:
+                    order_status.cancelled_quantity += order.quantity
+                    order_status.status = 'cancelled'
+                    order_status.save()
+                else:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'OrderStatus does not exist.'
+                    })
 
                 # Save the cancelled order in the CancelOrder table
                 CancelOrder.objects.create(
@@ -396,25 +412,28 @@ def cancel_order(request, order_id):
                 # Delete the order record
                 order.delete()
 
-                response = {
+                return JsonResponse({
                     'status': 'success',
                     'message': 'Order cancelled and deleted successfully.'
-                }
+                })
             else:
-                response = {
+                return JsonResponse({
                     'status': 'error',
                     'message': 'Only pending orders can be cancelled.'
-                }
+                })
 
-        except ObjectDoesNotExist:
-            response = {
+        except ObjectDoesNotExist as e:
+            return JsonResponse({
                 'status': 'error',
-                'message': 'Order does not exist.'
-            }
+                'message': f'Object does not exist: {str(e)}'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'An error occurred: {str(e)}'
+            })
 
-        return JsonResponse(response)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
 @login_required
@@ -429,36 +448,107 @@ def settle_event(request, event_id, settle_response):
     event.response = settle_response
     event.save()
 
-    match_orders = MatchOrder.objects.filter(event=event, response=settle_response)
+    # Create an entry in SettledEvent first
+    settled_event = SettledEvent.objects.create(event=event, response=settle_response)
+
+    # Filter match orders related to the event
+    match_orders = MatchOrder.objects.filter(event=event)
     
     for match_order in match_orders:
         user_profile = get_object_or_404(Profile, user=match_order.user)
         user_profile.balance = Decimal(user_profile.balance or '0.00')
-        credit_amount = Decimal(match_order.match_quantity * 10)
-        user_profile.balance += credit_amount
-        user_profile.save()
 
-        Transaction.objects.create(
+        # Calculate the credit or debit amount based on whether the user wins or loses
+        if match_order.response == settle_response:  # The user won
+            credit_amount = Decimal(match_order.match_quantity * 10)  # Example winning calculation
+            return_amount = credit_amount - match_order.total_match_price # Positive amount for winnings
+            user_profile.balance += credit_amount  # Update the user's balance with winnings
+        else:  # The user lost
+            credit_amount = Decimal('0.00')
+            return_amount = -Decimal(match_order.total_match_price)  # Negative amount for losses
+
+        # Save the updated user profile if the balance was adjusted
+        if credit_amount > 0:
+            user_profile.save()
+
+            # Record the transaction for winnings
+            Transaction.objects.create(
+                user=match_order.user,
+                profile=user_profile,
+                amount=credit_amount,
+                transaction_type='credit'
+            )
+
+        # Calculate total investment, return amount, and other quantities
+        total_investment = match_order.total_match_price
+
+        settled_quantity = match_order.match_quantity
+        cancel_quantity = CancelOrder.objects.filter(event=event, user=match_order.user).aggregate(total_cancel=Sum('cancel_quantity'))['total_cancel'] or Decimal('0.00')
+
+        # Create an entry in ClosedEvent for all users, whether they won or lost
+        ClosedEvent.objects.create(
             user=match_order.user,
-            profile=user_profile,
-            amount=credit_amount,
-            transaction_type='credit'
+            settled_event=settled_event,
+            settled_quantity=settled_quantity,
+            cancel_quantity=cancel_quantity,
+            total_investment=total_investment,
+            return_amount=return_amount  # Positive for wins, negative for losses
         )
 
-    # Create an entry in SettledEvent
-    SettledEvent.objects.create(event=event, response=settle_response)
+    # Automatically cancel all pending orders for the event
+    pending_orders = Order.objects.filter(event=event, status='pending')
+    for order in pending_orders:
+        profile = get_object_or_404(Profile, user=order.user)
+        profile.balance = Decimal(profile.balance or '0.00')
+        profile.balance += order.total_price
+        profile.save()
 
-    messages.success(request, 'event settled successfully.')
+        # Record the transaction for the refund
+        Transaction.objects.create(
+            user=order.user,
+            profile=profile,
+            amount=order.total_price,
+            transaction_type='refund'
+        )
+
+        # Update the OrderStatus object
+        order_status = OrderStatus.objects.filter(
+            user=order.user,
+            event=order.event
+        ).first()
+
+        if order_status:
+            order_status.cancelled_quantity += order.quantity
+            order_status.status = 'cancelled'
+            order_status.save()
+
+        # Save the cancelled order in the CancelOrder table
+        CancelOrder.objects.create(
+            user=order.user,
+            event=order.event,
+            response=order.response,
+            cancel_quantity=order.quantity,
+            price_per_quantity=order.price_per_quantity,
+            total_cancel_price=order.total_price
+        )
+
+        # Delete the pending order
+        order.delete()
+
+    # Delete match orders related to the event
+    MatchOrder.objects.filter(event=event).delete()
+
+    # Delete cancel orders related to the event
+    CancelOrder.objects.filter(event=event).delete()
+
+    messages.success(request, 'Event settled, all pending orders cancelled, and related match/cancel records deleted successfully.')
     return redirect('dashboard')
-
 
 
 @csrf_exempt
 def fetch_order_data(request):
     response_type = request.GET.get('response_type', None)
     event_id = request.GET.get('event_id', None)
-    
-    
     
     # Validate event_id
     if not event_id:
@@ -472,6 +562,10 @@ def fetch_order_data(request):
         orders = orders.filter(response='no')
     elif response_type == 'no':
         orders = orders.filter(response='yes')
+    
+    # Exclude orders placed by the requesting user
+    if request.user.is_authenticated:
+        orders = orders.exclude(user=request.user)
     
     # Define the mapping for price_per_quantity
     price_mapping = {

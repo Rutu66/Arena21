@@ -141,4 +141,18 @@ class SettledEvent(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.Event.title} - {self.response}"
+        return f"{self.event.title} - {self.response}"
+
+
+
+class ClosedEvent(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    settled_event = models.ForeignKey(SettledEvent, on_delete=models.CASCADE)
+    settled_quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    cancel_quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    total_investment = models.DecimalField(max_digits=15, decimal_places=2)
+    return_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.settled_event.event.title} - {self.user.username} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"

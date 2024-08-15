@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Category, SubCategory, Event, Profile, Transaction, Order, MatchOrder, CancelOrder, SettledEvent, OrderStatus
+from .models import Category, SubCategory, Event, Profile, Transaction, Order, MatchOrder, CancelOrder, SettledEvent, OrderStatus, ClosedEvent
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'icon')
@@ -49,8 +50,13 @@ class SettledEventAdmin(admin.ModelAdmin):
     search_fields = ('event__title',)
     list_filter = ('response', 'timestamp')
     
+class ClosedEventAdmin(admin.ModelAdmin):
+    list_display = ('user', 'settled_event', 'settled_quantity', 'cancel_quantity', 'total_investment', 'return_amount', 'timestamp')
+    list_filter = ('user', 'settled_event__event', 'timestamp')
+    search_fields = ('user__username', 'settled_event__event__title')
+    
 
-
+admin.site.register(ClosedEvent, ClosedEventAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(SubCategory, SubCategoryAdmin)
 admin.site.register(Event, EventAdmin)
