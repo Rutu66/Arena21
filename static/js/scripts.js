@@ -169,21 +169,8 @@ function openTab(tabName, event) {
 
 // event-active page
 
-function showTab(tabName) {
-    const tabs = document.querySelectorAll('.active-tab');
-    const transactions = document.querySelectorAll('.active-transaction');
 
-    tabs.forEach(tab => tab.classList.remove('active'));
-    transactions.forEach(transaction => transaction.classList.remove('active'));
 
-    document.querySelector(`.active-tab[onclick="showTab('${tabName}')"]`).classList.add('active');
-    document.querySelectorAll(`.active-transaction.${tabName}`).forEach(transaction => transaction.classList.add('active'));
-}
-
-// Initialize with 'all' tab selected
-document.addEventListener('DOMContentLoaded', () => {
-    showTab('all');
-});
 
    
     

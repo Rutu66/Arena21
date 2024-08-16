@@ -27,10 +27,10 @@
     </div>
 
     <div class="active-tabs">
-        <button class="active-tab active" onclick="showTab('all')">All</button>
-        <button class="active-tab" onclick="showTab('pending')">Pending</button>
-        <button class="active-tab" onclick="showTab('matched')">Matched</button>
-        <button class="active-tab" onclick="showTab('cancelled')">Cancelled</button>
+        <button class="active-tab" id="all-tab" onclick="showTab('all')">All</button>
+        <button class="active-tab" id="pending-tab" onclick="showTab('pending')">Pending</button>
+        <button class="active-tab" id="matched-tab" onclick="showTab('matched')">Matched</button>
+        <button class="active-tab" id="cancelled-tab" onclick="showTab('cancelled')">Cancelled</button>
     </div>
     
     <div class="active-transaction-list">
@@ -79,7 +79,31 @@
 </div>   
 
 <script>
+    // Function to show the selected tab content and activate the corresponding tab
+    function showTab(tabName) {
+        // Hide all transactions
+        document.querySelectorAll('.active-transaction').forEach(function (transaction) {
+            transaction.style.display = 'none';
+        });
+
+        // Show transactions of the selected tab
+        document.querySelectorAll('.' + tabName).forEach(function (transaction) {
+            transaction.style.display = 'flex';
+        });
+
+        // Remove the active class from all tabs
+        document.querySelectorAll('.active-tab').forEach(function (tab) {
+            tab.classList.remove('active');
+        });
+
+        // Add the active class to the clicked tab
+        document.getElementById(tabName + '-tab').classList.add('active');
+    }
+
+    // Event listener to activate the "All" tab on page load
     document.addEventListener('DOMContentLoaded', function () {
+        showTab('all'); // Activate the "All" tab by default
+
         document.querySelectorAll('.active-cancel-btn').forEach(function (button) {
             button.addEventListener('click', function () {
                 const orderId = this.getAttribute('data-order-id');
@@ -101,9 +125,9 @@
                 .then(data => {
                     if (data.status === 'success') {
                         // Remove the canceled order from the DOM
-                        const transactionElement = button.closest('.active-transaction'); // Use correct selector
+                        const transactionElement = button.closest('.active-transaction');
                         if (transactionElement) {
-                            transactionElement.remove(); // This removes the order from the page
+                            transactionElement.remove();
                         }
                     } else {
                         console.error('Error:', data.message);

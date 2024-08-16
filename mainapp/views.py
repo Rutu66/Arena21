@@ -88,22 +88,19 @@ def index_view(request):
 
 
 
-
-
-
-
-
-
 def lending(request):
     if request.user.is_authenticated:
         return redirect('index')
     return render(request, 'lending.html')
 
+def profile(request):
+    
+    return render(request, 'profile.html')
+
 def event_active(request, event_id):
     # Fetch the specific event
     event = get_object_or_404(Event, id=event_id)
-    print("#######################")
-    print(event)
+    
     
     # Fetch orders related to the event
     orders = Order.objects.filter(event=event,user=request.user)

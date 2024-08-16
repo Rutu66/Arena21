@@ -910,140 +910,250 @@ transform: scale(1.02); /* Slightly scale up on hover */
 }
 
 
-
-
+/* General Menu Container */
 .menu {
-    width: 75%;
-    max-width: 320px;
+    width: 85%;
+    max-width: 350px;
     height: 100%;
     background-color: #ffffff;
     position: fixed;
     top: 0;
     left: -100%;
     z-index: 1000;
-    transition: 0.3s;
-    padding: 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: left 0.4s ease-in-out;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+    border-radius: 0 20px 20px 0;
+    overflow-y: auto;
+    font-family: 'Poppins', sans-serif;
+    padding: 20px;
 }
 
-
+/* Open Menu Animation */
 .menu.open {
     left: 0;
 }
 
+/* Menu Header */
+/* Menu Header */
 .menu-header {
+    background: linear-gradient(135deg, #00796b, #ff5252);
+    padding: 20px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 40px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+    transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.menu-header:hover {
+    background: linear-gradient(135deg, #005b4f, #e73e5f);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Profile Picture Wrapper with Border */
+.profile-pic-wrapper {
+    background: linear-gradient(135deg, #ff5252, #00796b);
+    padding: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.profile-pic {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-pic:hover {
+    transform: scale(1.15);
 }
 
 .user-details {
     display: flex;
     align-items: center;
-}
-
-.profile-pic {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-right: 15px;
-    border: 3px solid #4CAF50;
+    gap: 20px; /* Increased space between profile picture and info */
 }
 
 .user-info {
-    display: flex;
-    flex-direction: column;
-    font-size: 16px;
+    text-align: left;
 }
 
-.user-info span {
-    font-weight: bold;
-    color: #333;
+.user-info .username {
+    font-weight: 700;
+    font-size: 26px; /* Increased font size for better readability */
+    display: block;
+    line-height: 1.2;
 }
 
-.user-info p {
-    margin: 5px 0 0;
-    color: #777;
-    font-size: 14px;
+.user-info .user-handle {
+    font-size: 18px; /* Increased font size for better readability */
+    margin-top: 5px;
+    opacity: 0.9;
+    line-height: 1.4;
 }
 
+/* Close Button */
 .close-button {
-    font-size: 24px;
+    font-size: 30px; /* Slightly larger for better accessibility */
     cursor: pointer;
-    background: none;
-    color: #333;
-    padding: 5px;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.1);
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    border: none;
-    outline: none;
-    transition: 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-button i {
+    color: #ffffff;
+    transition: color 0.3s ease-in-out;
 }
 
 .close-button:hover {
-    background-color: #f1f1f1;
+    background: rgba(0, 0, 0, 0.2);
 }
 
+.close-button:hover i {
+    color: #ffeb3b; /* Bright color on hover for better contrast */
+}
+
+
+/* Menu Items */
 .menu-items {
     list-style: none;
     padding: 0;
     margin: 0;
-    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 20px;
 }
 
 .menu-items li {
-    margin-bottom: 30px;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .menu-items li a {
     text-decoration: none;
-    color: #4CAF50;
+    color: #333;
     font-size: 18px;
-    padding: 12px 20px;
-    display: block;
-    transition: 0.3s;
-    border-radius: 10px;
-    background-color: #f9f9f9;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    border-radius: 12px;
+    background-color: #f5f5f5;
+    font-weight: 600;
+    position: relative;
+    z-index: 2; /* Ensures text is above the ::before pseudo-element */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
-.menu-items li a:hover {
-    color: #ffffff;
-    background-color: #4CAF50;
+.menu-items li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(135deg, #ff5252, #00796b);
+    transition: width 0.3s ease-in-out;
+    border-radius: 12px 0 0 12px;
+    z-index: 1; /* Ensures the ::before element stays behind the text */
 }
 
+.menu-items li a:hover::before {
+    width: 15%; /* Expands the background to cover the entire width */
+}
+
+/* Icon Styles */
 .icon-profile, .icon-dashboard, .icon-portfolio, .icon-logout {
-    margin-right: 15px;
-    font-size: 20px;
+    margin-right: 16px;
+    font-size: 22px;
+    color: #00796b;
+    transition: color 0.3s ease-in-out;
+    z-index: 1;
 }
 
-.logout {
-    margin-top: auto;
-    padding-top: 20px;
-    border-top: 1px solid #f1f1f1;
+.menu-items li a:hover .icon-profile,
+.menu-items li a:hover .icon-dashboard,
+.menu-items li a:hover .icon-portfolio,
+.menu-items li a:hover .icon-logout {
+    color: #000000;
 }
 
-.logout a {
-    color: red;
-    font-weight: bold;
-    padding: 12px 20px;
-    display: block;
-    transition: 0.3s;
-    text-align: center;
+/* Additional Decorative Elements */
+.menu-header::before {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(135deg, #ff5252, #00796b);
     border-radius: 10px;
-    background-color: #f9f9f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.logout a:hover {
-    color: white;
-    background-color: darkred;
+
+/* Footer Section */
+.menu-footer {
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
 }
+
+.menu-footer a {
+    color: #00796b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease-in-out;
+}
+
+.menu-footer a:hover {
+    color: #ff5252;
+}
+
+/* Responsive Enhancements */
+@media screen and (max-width: 480px) {
+    .menu {
+        width: 80%;
+        max-width: none;
+    }
+
+    .menu-items li a {
+        font-size: 16px;
+        padding: 14px 18px;
+    }
+
+    .icon-profile, .icon-dashboard, .icon-portfolio, .icon-logout {
+        font-size: 20px;
+    }
+}
+
 
 
 /* dashboard css */
