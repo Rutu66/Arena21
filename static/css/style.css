@@ -17,9 +17,7 @@ body {
     max-width: 480px; /* Ensures it doesn't exceed the desired width */
     margin: 0 auto;
     padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
     padding-bottom: 80px; /* Prevents content from being covered by bottom nav */
     margin-top: 80px;
 }
@@ -1181,32 +1179,104 @@ transform: scale(1.02); /* Slightly scale up on hover */
 .dash-tab.active {
     color: #ffffff;
     border-bottom: 3px solid #00796b;
-    background: #00796b;
+    background: #00796b;    
 }
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 
 .dash-trade-info {
     background-color: #ffffff;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
 
-.dash-trade-info .dash-current-value {
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.icon {
     font-size: 24px;
-    font-weight: 700;
     color: #00796b;
-    margin-bottom: 15px;
 }
 
-.dash-trade-info .dash-details {
+.heading {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.dash-current-values {
     display: flex;
     justify-content: space-between;
-    font-size: 16px;
-    color: #555;
+    gap: 15px;
 }
+
+.value-card {
+    background: #f4f4f4;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.value-label {
+    font-size: 14px;
+    color: #666;
+}
+
+.value-amount {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+}
+
+.total-investment .value-amount {
+    color: #00796b;
+}
+
+.total-returns .value-amount {
+    color: #388e3c;
+}
+
+.dash-details {
+    text-align: center;
+}
+
+.details-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.details-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #d32f2f;
+    background-color: #fce4e4;
+    border-radius: 12px;
+    padding: 10px;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
 
 .dash-trade-card {
     background-color: #ffffff;
@@ -1557,9 +1627,7 @@ transform: scale(1.02); /* Slightly scale up on hover */
             max-width: 480px;
             margin: 0px auto;
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+           
             border: 1px solid #e0e0e0;
         }
 
