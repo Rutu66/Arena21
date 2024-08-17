@@ -8,7 +8,7 @@
         <h2>Total Balance</h2>
         <div class="balance-amount">&#8377; {{ profile.balance }}</div>
         <div class="balance-actions">
-            <a href="{% url 'dashboard' %}" class="my-account-link">
+            {% comment %} <a href="{% url 'dashboard' %}" class="my-account-link">   {% endcomment %}
                 <button class="my-account">My Account</button>
             </a>
         </div>
@@ -101,8 +101,12 @@
                             <span>1</span>
                             <span>10</span>
                         </div>
+                        <div class="input-group">
+                            <button type="button" class="decrement" data-target="priceValue">-</button>
+                            <input type="number" id="priceValue" name="price_per_quantity" min="1" max="10" value="5" step="1">
+                            <button type="button" class="increment" data-target="priceValue">+</button>
+                        </div>
                         <input type="range" id="price" name="price_per_quantity" min="1" max="10" value="5" step="1">
-                        <input type="number" id="priceValue" name="price_per_quantity" min="1" max="10" value="5" step="1">
                     </div>
                     <div class="quantity-slider slider-container">
                         <label for="quantity">Quantity</label>
@@ -110,10 +114,15 @@
                             <span>1</span>
                             <span>1000</span>
                         </div>
+                        <div class="input-group">
+                            <button type="button" class="decrement" data-target="quantityValue">-</button>
+                            <input type="number" id="quantityValue" name="quantity" min="1" max="1000" value="500" step="1">
+                            <button type="button" class="increment" data-target="quantityValue">+</button>
+                        </div>
                         <input type="range" id="quantity" name="quantity" min="1" max="1000" value="500" step="1">
-                        <input type="number" id="quantityValue" name="quantity" min="1" max="1000" value="500" step="1">
                     </div>
                 </div>
+                
                 
                 <div class="bet-summary">
                     <div class="column">
@@ -151,7 +160,7 @@
                         <div class="swipe-button" id="swipeButton">
                             <span class="swipe-text" id="swipeText">Slide to Place Order</span>
                             <div class="swipe-handle" id="swipeHandle">
-                                <i class="fa fa-chevron-right"></i>
+                                
                             </div>
                         </div>
                     </div>

@@ -136,34 +136,38 @@ def event_closed(request, event_id):
 
 
 from collections import defaultdict
-
-def dashboard(request):
+def portfolio(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
-    
-    # Get all orders, match orders, and cancel orders
     orders = Order.objects.filter(user=request.user)
     matchorders = MatchOrder.objects.filter(user=request.user)
     cancelorders = CancelOrder.objects.filter(user=request.user)
     closedevents = ClosedEvent.objects.filter(user=request.user)
 
-    # Group everything by event
-    grouped_events = defaultdict(lambda: {'orders': [], 'matchorders': [], 'cancelorders': []})
+    grouped_events = defaultdict(lambda: {'orders': [], 'matchorders': [], 'cancelorders': [], 'total_match_price': 0})
+    
+    total_investment = 0
     
     for order in orders:
         grouped_events[order.event]['orders'].append(order)
     
     for matchorder in matchorders:
         grouped_events[matchorder.event]['matchorders'].append(matchorder)
+        grouped_events[matchorder.event]['total_match_price'] += matchorder.total_match_price
+        total_investment += matchorder.total_match_price
     
     for cancelorder in cancelorders:
         grouped_events[cancelorder.event]['cancelorders'].append(cancelorder)
 
-    return render(request, 'dashboard.html', {
+    return render(request, 'portfolio.html', {
         'profile': profile, 
         'grouped_events': dict(grouped_events),
         'cancelorders': cancelorders,
-        'closedevents' : closedevents
+        'closedevents': closedevents,
+        'total_investment': total_investment
     })
+    
+def dashboard(request):
+    return render(request, 'dashboard.html')
 
 
 @login_required

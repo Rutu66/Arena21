@@ -1,85 +1,176 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - Responsive UI{% endblock %}
+{% block title %}Dashboard - Modern Interface{% endblock %}
 
 {% block content %}
-    <div class="event-container">
-        <div class="dash-tabs">
-            <div class="dash-tab active" onclick="openTab('activeTrades', event)">Active Trades</div>
-            <div class="dash-tab" onclick="openTab('closedTrades', event)">Closed Trades</div>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        color: #00796b;
+    }
+    
+    .dash-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        padding-bottom: 80px;
+        
+    }
+
+    .dashboard-container {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .dashboard-title {
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #00796b;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .dashboard-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .dashboard-card {
+        background: linear-gradient(135deg, #ffffff 0%, #eaeaea 100%);
+        border-radius: 16px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        flex: 1 1 calc(50% - 20px);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+        font-size: 20px;
+        color: #444;
+        margin-bottom: 10px;
+    }
+
+    .card-value {
+        font-size: 30px;
+        color: #00796b;
+        font-weight: 700;
+    }
+
+    .card-description {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .action-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .action-button {
+        background-color: #00796b;
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        padding: 15px 25px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        text-align: center;
+    }
+
+    .action-button:hover {
+        background-color: #004d40;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .account-details {
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .details-title {
+        font-size: 24px;
+        color: #00796b;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .details-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .details-list li {
+        font-size: 16px;
+        margin-bottom: 10px;
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .details-list li::before {
+        content: '•';
+        font-size: 18px;
+        color: #00796b;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+</style>
+
+<div class="dash-container">
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">User Dashboard</h1>
+        
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <h2 class="card-title">Total Deposits</h2>
+                <p class="card-value">₹ 120,500.00</p>
+                <p class="card-description">Total amount deposited into your account.</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2 class="card-title">Pending Withdrawals</h2>
+                <p class="card-value">₹ 15,000.00</p>
+                <p class="card-description">Total amount requested for withdrawal.</p>
+            </div>
         </div>
-
-        <!-- Content for Active Trades -->
-        <div id="activeTrades" class="dash-content active">
-
-            <div class="dash-trade-info">
-                <div class="dash-current-values">
-                    <div class="value-card total-investment">
-                        <span class="value-label">Investment</span>
-                        <span class="value-amount">₹299,836.80</span>
-                    </div>
-                    <div class="value-card total-returns">
-                        <span class="value-label">Returns</span>
-                        <span class="value-amount">₹6,000.00</span>
-                    </div>
-                </div>
-                
-            </div>
-            
-
-            {% for event, event_data in grouped_events.items %}
-            <div class="dash-trade-card">
-                <div class="dash-info">
-                    <div class="dash-badge-logo-container">
-                        <img src="{{ event.icon.url }}" alt="{{ event.title }}" class="dash-icon">
-                    </div>
-                    <div class="dash-text">
-                        {{ event.title }}
-                        <div class="dash-invested">Invested ₹0.5 • Gains ₹0</div>
-                    </div>
-                </div>
-                <a href="{% url 'event_active' event.id %}" class="dash-btn">View</a>
-            </div>
-            {% endfor %}
+        
+        <div class="action-container">
+            <button class="action-button">Deposit Funds</button>
+            <button class="action-button">Withdraw Funds</button>
         </div>
-
-        <!-- Content for Closed Trades -->
-        <div id="closedTrades" class="dash-content">
-            <div class="dash-trade-info">
-                
-                <div class="dash-current-values">
-                    
-                    <div class="value-card total-investment">
-                        <span class="value-label">Total Investment</span>
-                        <span class="value-amount">₹299,836.80</span>
-                    </div>
-                    <div class="value-card total-returns">
-                        <span class="value-label">Total Returns</span>
-                        <span class="value-amount">₹6,000.00</span>
-                    </div>
-                </div>
-                <div class="dash-details">
-                    <span class="details-label">Today's Returns</span>
-                    <span class="details-value">₹-7,400.00</span>
-                </div>
-            </div>
-            
-
-            {% for event in closedevents %}
-            <div class="dash-trade-card">
-                <div class="dash-info">
-                    <div class="dash-badge-logo-container">
-                        <img src="{{ event.settled_event.event.icon.url }}" alt="{{ closedevents.event.title }}" class="dash-icon">
-                    </div>
-                    <div class="dash-text">
-                        {{ event.settled_event.event.title }}
-                        <div class="dash-invested">Invested ₹0.5 • Gains ₹0</div>
-                    </div>
-                </div>
-                <a href="{% url 'event_closed' event.id %}" class="dash-btn">View</a>
-            {% endfor %} 
-            
+        
+        <div class="account-details">
+            <h2 class="details-title">Account Profile</h2>
+            <ul class="details-list">
+                <li><strong>Username:</strong> alex_johnson</li>
+                <li><strong>Email:</strong> alex.johnson@example.com</li>
+                <li><strong>Phone:</strong> +91 9876543210</li>
+                <li><strong>Address:</strong> 789 Boulevard, City, Country</li>
+                <li><strong>Join Date:</strong> March 15, 2022</li>
+            </ul>
         </div>
     </div>
-
+</div>
 {% endblock %}

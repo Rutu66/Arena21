@@ -145,6 +145,60 @@
             menu.classList.toggle('open');
         }
 
+        // Function to increment/decrement the range and number input values
+function changeValue(id, step) {
+    const rangeInput = document.getElementById(id);
+    const numberInput = document.getElementById(id + 'Value');
+    let newValue = parseInt(rangeInput.value) + step;
+
+    // Ensure the new value is within the min and max range
+    if (newValue >= parseInt(rangeInput.min) && newValue <= parseInt(rangeInput.max)) {
+        rangeInput.value = newValue;
+        numberInput.value = newValue;
+    }
+}
+
+// Function to synchronize the range and number inputs
+function syncInputs(sourceId, targetId) {
+    document.getElementById(targetId).value = document.getElementById(sourceId).value;
+}
+
+document.querySelectorAll('.increment').forEach(button => {
+    button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        let currentValue = parseInt(input.value);
+        const maxValue = parseInt(input.getAttribute('max'));
+
+        if (currentValue < maxValue) {
+            input.value = currentValue + 1;
+            updateRange(targetId);
+        }
+    });
+});
+
+document.querySelectorAll('.decrement').forEach(button => {
+    button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        let currentValue = parseInt(input.value);
+        const minValue = parseInt(input.getAttribute('min'));
+
+        if (currentValue > minValue) {
+            input.value = currentValue - 1;
+            updateRange(targetId);
+        }
+    });
+});
+
+function updateRange(targetId) {
+    const input = document.getElementById(targetId);
+    const rangeInput = document.getElementById(targetId.replace('Value', ''));
+    rangeInput.value = input.value;
+}
+
+
+
 // dashboard page
 
 function openTab(tabName, event) {

@@ -17,7 +17,9 @@ urlpatterns = [
     path('event_closed/<int:event_id>/', event_closed, name='event_closed'),
     path('profile/', profile, name='profile'),
     
+    path('portfolio/', portfolio, name='portfolio'),
     path('dashboard/', dashboard, name='dashboard'),
+    
     path('add_money/', add_money, name='add_money'),
     path('place_order/', place_order, name='place_order'),
     path('cancel_order/<int:order_id>/', cancel_order, name='cancel_order'),

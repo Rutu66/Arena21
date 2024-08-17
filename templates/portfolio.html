@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Responsive UI{% endblock %}
+
+{% block content %}
+    <div class="event-container">
+        <div class="dash-tabs">
+            <div class="dash-tab active" onclick="openTab('activeTrades', event)">Active Trades</div>
+            <div class="dash-tab" onclick="openTab('closedTrades', event)">Closed Trades</div>
+        </div>
+
+        <!-- Content for Active Trades -->
+        <div id="activeTrades" class="dash-content active">
+
+            <div class="dash-trade-info">
+                <div class="dash-current-values">
+                    <div class="value-card total-investment">
+                        <span class="value-label">Investment</span>
+                        <span class="value-amount">₹{{ total_investment|floatformat:2 }}</span>
+                    </div>
+                    
+                    <div class="value-card total-returns">
+                        <span class="value-label">Returns</span>
+                        <span class="value-amount">₹00</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+
+            {% for event, event_data in grouped_events.items %}
+            <div class="dash-trade-card">
+                <div class="dash-info">
+                    <div class="dash-badge-logo-container">
+                        <img src="{{ event.icon.url }}" alt="{{ event.title }}" class="dash-icon">
+                    </div>
+                    <div class="dash-text">
+                        {{ event.title }}
+                        <div class="dash-invested">Invested ₹0.5 • Gains ₹0</div>
+                    </div>
+                </div>
+                <a href="{% url 'event_active' event.id %}" class="dash-btn">View</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Content for Closed Trades -->
+        <div id="closedTrades" class="dash-content">
+            <div class="dash-trade-info">
+                
+                <div class="dash-current-values">
+                    
+                    <div class="value-card total-investment">
+                        <span class="value-label">Total Investment</span>
+                        <span class="value-amount">₹299,836.80</span>
+                    </div>
+                    <div class="value-card total-returns">
+                        <span class="value-label">Total Returns</span>
+                        <span class="value-amount">₹6,000.00</span>
+                    </div>
+                </div>
+                <div class="dash-details">
+                    <span class="details-label">Today's Returns</span>
+                    <span class="details-value">₹-7,400.00</span>
+                </div>
+            </div>
+            
+
+            {% for event in closedevents %}
+            <div class="dash-trade-card">
+                <div class="dash-info">
+                    <div class="dash-badge-logo-container">
+                        <img src="{{ event.settled_event.event.icon.url }}" alt="{{ closedevents.event.title }}" class="dash-icon">
+                    </div>
+                    <div class="dash-text">
+                        {{ event.settled_event.event.title }}
+                        <div class="dash-invested">Invested ₹0.5 • Gains ₹0</div>
+                    </div>
+                </div>
+                <a href="{% url 'event_closed' event.id %}" class="dash-btn">View</a>
+            {% endfor %} 
+            
+        </div>
+    </div>
+
+{% endblock %}

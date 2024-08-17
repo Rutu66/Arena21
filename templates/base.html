@@ -37,7 +37,7 @@
             </a>
         </div>
         <div class="nav-item">
-            <a href="{% url 'dashboard' %}">
+            <a href="{% url 'portfolio' %}">
                 <img src="{% static 'images/portfolio.svg' %}" alt="Portfolio Icon">
                 <span>Portfolio</span>
             </a>
@@ -63,8 +63,8 @@
 
         <ul class="menu-items">
             <li><a href="{% url 'profile' %}"><i class="fas fa-user icon-profile"></i>Profile</a></li>
-            <li><a href=""><i class="fas fa-tachometer-alt icon-dashboard"></i>Dashboard</a></li>
-            <li><a href="{% url 'dashboard' %}"><i class="fas fa-briefcase icon-portfolio"></i>Portfolio</a></li>
+            <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt icon-dashboard"></i>Dashboard</a></li>
+            <li><a href="{% url 'portfolio' %}"><i class="fas fa-briefcase icon-portfolio"></i>Portfolio</a></li>
             <li class="logout"><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt icon-logout"></i>Logout</a></li>
         </ul>
     </div>
