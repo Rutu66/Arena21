@@ -1549,3 +1549,159 @@ transform: scale(1.02); /* Slightly scale up on hover */
 
 
 /* event_closed css */
+
+/* Edit Profile css */
+
+     
+        .pro-container {
+            max-width: 480px;
+            margin: 0px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .pro-profile-header {
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #00796b;
+            text-align: center;
+            border-bottom: 2px solid #00796b;
+            padding-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .pro-profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #e1e4ea;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border: 4px solid #00796b;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .pro-profile-pic:hover {
+            transform: scale(1.05);
+            border-color: #004d40;
+        }
+
+        .pro-profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pro-edit-icon {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: #00796b;
+            border-radius: 50%;
+            padding: 8px;
+            color: #fff;
+            font-size: 18px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .pro-edit-icon:hover {
+            background-color: #004d40;
+        }
+
+        .pro-form-group {
+            margin-bottom: 25px;
+        }
+
+        .pro-form-group label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #004d40;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-align: left;
+            display: block;
+        }
+
+        .pro-form-input {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #f8f9fa;
+            color: #333;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .pro-form-input:focus {
+            border-color: #00796b;
+            box-shadow: 0 0 5px rgba(0, 121, 107, 0.3);
+        }
+
+        .pro-btn-save {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            background-color: #00796b;
+            color: #fff;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pro-btn-save:hover {
+            background-color: #004d40;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .pro-joined-date {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+            text-align: center;
+        }
+
+        /* Progress Bar */
+        .pro-progress-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .pro-progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 10px;
+            position: relative;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .pro-progress-bar-fill {
+            height: 100%;
+            background-color: #00796b;
+            width: 0; /* Will be set dynamically */
+            transition: width 0.4s ease-in-out;
+        }
+
+        .pro-progress-text {
+            font-size: 14px;
+            color: #00796b;
+        }
+    

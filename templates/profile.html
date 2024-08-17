@@ -1,152 +1,99 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - Modern Profile Design{% endblock %}
+{% block title %}Edit Profile - Modern Design{% endblock %}
 
 {% block content %}
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #f0f4f8;
-            color: #333;
-        }
 
-        .container {
-            max-width: 480px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e0e0e0;
-        }
+    <div class="pro-container">
+        <h2 class="pro-profile-header">Edit Profile</h2>
 
-        .profile-header {
-            margin-bottom: 20px;
-            font-size: 28px;
-            font-weight: 700;
-            color: #00796b;
-            text-align: center;
-            border-bottom: 2px solid #00796b;
-            padding-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
+        <!-- Progress Bar Section -->
+        <div class="pro-progress-container">
+            <div class="pro-progress-bar">
+                <div class="pro-progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+            <div class="pro-progress-text" id="progress-text">0%</div>
+        </div>
 
-        .profile-pic {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #e1e4ea;
-            margin: 0 auto 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            border: 3px solid #00796b;
-        }
-
-        .profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .edit-icon {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background-color: #00796b;
-            border-radius: 50%;
-            padding: 8px;
-            color: #fff;
-            font-size: 18px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            font-size: 18px; /* Increased font size for better readability */
-            font-weight: 700; /* Bolder font weight for emphasis */
-            color: #004d40; /* Darker, richer color for a stronger visual impact */
-            margin-bottom: 10px; /* Increased space between label and input */
-            letter-spacing: 0.75px; /* Slightly more letter spacing for a modern look */
-            text-transform: uppercase; /* Uppercase text for a more distinct and formal appearance */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-            text-align: left; /* Aligns the label text to the left */
-            display: block; /* Ensures labels take up full width */
-        }
-        
-
-        .form-input {
-            width: 94%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 15px;
-            background-color: #f8f9fa;
-            color: #333;
-            outline: none;
-            border: 1px solid #00796b;
-        }
-
-        .btn-save {
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            background-color: #00796b;
-            color: #fff;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .joined-date {
-            margin-top: 15px;
-            font-size: 13px;
-            color: #888;
-            text-align: center;
-        }
-    </style>
-
-    <div class="container">
-        <h2 class="profile-header">Edit Profile</h2>
-
-        <div class="profile-pic">
-            <img src="https://via.placeholder.com/120" alt="Profile Picture">
-            <div class="edit-icon">✎</div>
+        <div class="pro-profile-pic">
+            <img id="profile-image" src="https://via.placeholder.com/120" alt="Profile Picture">
+            <div class="pro-edit-icon">
+                <input type="file" id="file-input" accept="image/*" style="display: none;">
+                <label for="file-input" style="cursor: pointer;">✎</label>
+            </div>
         </div>
 
         <form id="edit-profile-form">
-            <div class="form-group">
+            <div class="pro-form-group">
                 <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" class="form-input" placeholder="Enter your full name" required>
+                <input type="text" id="name" name="name" class="pro-form-input" placeholder="Enter your full name">
             </div>
-            <div class="form-group">
+            <div class="pro-form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-input" placeholder="Enter your username" required>
+                <input type="text" id="username" name="username" class="pro-form-input" placeholder="Enter your username">
             </div>
-            <div class="form-group">
+            <div class="pro-form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" required>
+                <input type="email" id="email" name="email" class="pro-form-input" placeholder="Enter your email">
             </div>
-            <div class="form-group">
+            <div class="pro-form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-input" placeholder="Enter a new password">
+                <input type="password" id="password" name="password" class="pro-form-input" placeholder="Enter a new password">
             </div>
-            <button type="submit" class="btn-save">Save Changes</button>
+            <button type="submit" class="pro-btn-save">Save Changes</button>
         </form>
 
-        <div class="joined-date">
+        <div class="pro-joined-date">
             Joined 21 Jan 2020
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const profileImage = document.getElementById('profile-image');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const progressText = document.getElementById('progress-text');
+            const formFields = document.querySelectorAll('.pro-form-input');
+
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        profileImage.src = e.target.result;
+                    }
+                    
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Please select a valid image file.');
+                }
+            });
+
+            // Function to update progress bar based on filled fields
+            function updateProgress() {
+                let filledFields = 0;
+                formFields.forEach(field => {
+                    if (field.value.trim() !== '') {
+                        filledFields++;
+                    }
+                });
+                
+                const totalFields = formFields.length;
+                const progressPercentage = (filledFields / totalFields) * 100;
+                progressBarFill.style.width = `${progressPercentage}%`;
+                progressText.textContent = `${Math.round(progressPercentage)}%`;
+            }
+
+            // Attach event listeners to update progress on field changes
+            formFields.forEach(field => {
+                field.addEventListener('input', updateProgress);
+            });
+
+            // Initialize progress bar
+            updateProgress();
+        });
+    </script>
 {% endblock %}
