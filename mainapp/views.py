@@ -166,8 +166,10 @@ def portfolio(request):
         'total_investment': total_investment
     })
     
+@login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    profile = Profile.objects.get(user=request.user)
+    return render(request, 'dashboard.html', {'profile': profile})
 
 
 @login_required

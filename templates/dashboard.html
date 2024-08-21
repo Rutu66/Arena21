@@ -1,176 +1,284 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - Modern Interface{% endblock %}
+{% block title %}Home - Responsive UI{% endblock %}
 
 {% block content %}
-<style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        background-color: #ffffff;
-        color: #00796b;
-    }
-    
-    .dash-container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-        padding-bottom: 80px;
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            color: #00796b;
+        }
         
-    }
-
-    .dashboard-container {
-        background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-    }
-
-    .dashboard-title {
-        font-size: 32px;
-        margin-bottom: 20px;
-        color: #00796b;
-        text-align: center;
-        font-weight: 700;
-    }
-
-    .dashboard-cards {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-
-    .dashboard-card {
-        background: linear-gradient(135deg, #ffffff 0%, #eaeaea 100%);
-        border-radius: 16px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        flex: 1 1 calc(50% - 20px);
-        text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .dashboard-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-title {
-        font-size: 20px;
-        color: #444;
-        margin-bottom: 10px;
-    }
-
-    .card-value {
-        font-size: 30px;
-        color: #00796b;
-        font-weight: 700;
-    }
-
-    .card-description {
-        font-size: 16px;
-        color: #666;
-    }
-
-    .action-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .action-button {
-        background-color: #00796b;
-        color: #ffffff;
-        border: none;
-        border-radius: 12px;
-        padding: 15px 25px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        text-align: center;
-    }
-
-    .action-button:hover {
-        background-color: #004d40;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .account-details {
-        background-color: #ffffff;
-        border-radius: 16px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-    }
-
-    .details-title {
-        font-size: 24px;
-        color: #00796b;
-        margin-bottom: 15px;
-        font-weight: 700;
-    }
-
-    .details-list {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .details-list li {
-        font-size: 16px;
-        margin-bottom: 10px;
-        position: relative;
-        padding-left: 30px;
-    }
-
-    .details-list li::before {
-        content: '•';
-        font-size: 18px;
-        color: #00796b;
-        position: absolute;
-        left: 0;
-        top: 0;
-    }
-</style>
-
-<div class="dash-container">
-    <div class="dashboard-container">
-        <h1 class="dashboard-title">User Dashboard</h1>
-        
-        <div class="dashboard-cards">
-            <div class="dashboard-card">
-                <h2 class="card-title">Total Deposits</h2>
-                <p class="card-value">₹ 120,500.00</p>
-                <p class="card-description">Total amount deposited into your account.</p>
-            </div>
+        .container {
+           
+            max-width: 480px; /* Ensures it doesn't exceed the desired width */
+            margin: 0 auto;
+            padding: 20px;
             
-            <div class="dashboard-card">
-                <h2 class="card-title">Pending Withdrawals</h2>
-                <p class="card-value">₹ 15,000.00</p>
-                <p class="card-description">Total amount requested for withdrawal.</p>
+            padding-bottom: 80px; /* Prevents content from being covered by bottom nav */
+            
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #00796b;
+        }
+
+        .dashboard-balance {
+            font-size: 22px;
+            margin: 20px 0;
+            color: #004d40;
+            text-align: center;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background-color: #00796b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #004d40;
+        }
+
+        .recent-transactions {
+            margin: 30px 0;
+        }
+
+        .recent-transactions h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #00796b;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-item span {
+            font-size: 16px;
+        }
+
+        .transaction-item .amount {
+            color: #d32f2f;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #00796b;
+        }
+
+        .modal-header .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .modal-header .close:hover {
+            color: #000;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-body input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-footer .btn {
+            background-color: #00796b;
+        }
+
+        .modal-footer .btn:hover {
+            background-color: #004d40;
+        }
+    </style>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+        </div>
+
+        <!-- Show User Balance -->
+        <div class="dashboard-balance">
+            Balance: ₹{{ profile.balance }}
+        </div>
+
+        <!-- Dashboard Actions -->
+        <div class="dashboard-actions">
+            <button class="btn" id="addMoneyBtn">Add Money</button>
+            <button class="btn" id="withdrawMoneyBtn">Withdraw Money</button>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="recent-transactions">
+            <h2>Recent Transactions</h2>
+            <div class="transaction-item">
+                <span>Added Money</span>
+                <span class="amount">₹5000</span>
+            </div>
+            <div class="transaction-item">
+                <span>Withdrawal</span>
+                <span class="amount">₹2000</span>
+            </div>
+            <div class="transaction-item">
+                <span>Added Money</span>
+                <span class="amount">₹1500</span>
             </div>
         </div>
-        
-        <div class="action-container">
-            <button class="action-button">Deposit Funds</button>
-            <button class="action-button">Withdraw Funds</button>
+
+        <!-- Add Money Modal -->
+        <div id="addMoneyModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add Money</h2>
+                    <span class="close" id="closeAddMoney">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'add_money' %}">
+                        {% csrf_token %}
+                        <input type="number" step="0.01" name="amount" placeholder="Enter amount">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn">Add</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        
-        <div class="account-details">
-            <h2 class="details-title">Account Profile</h2>
-            <ul class="details-list">
-                <li><strong>Username:</strong> alex_johnson</li>
-                <li><strong>Email:</strong> alex.johnson@example.com</li>
-                <li><strong>Phone:</strong> +91 9876543210</li>
-                <li><strong>Address:</strong> 789 Boulevard, City, Country</li>
-                <li><strong>Join Date:</strong> March 15, 2022</li>
-            </ul>
+
+        <!-- Withdraw Money Modal -->
+        <div id="withdrawMoneyModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Withdraw Money</h2>
+                    <span class="close" id="closeWithdrawMoney">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="number" id="withdrawMoneyAmount" placeholder="Enter amount">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" id="confirmWithdrawMoney">Withdraw</button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+
+    <script>
+        // Get modal elements
+        const addMoneyModal = document.getElementById('addMoneyModal');
+        const withdrawMoneyModal = document.getElementById('withdrawMoneyModal');
+
+        // Get button elements
+        const addMoneyBtn = document.getElementById('addMoneyBtn');
+        const withdrawMoneyBtn = document.getElementById('withdrawMoneyBtn');
+
+        // Get close elements
+        const closeAddMoney = document.getElementById('closeAddMoney');
+        const closeWithdrawMoney = document.getElementById('closeWithdrawMoney');
+
+        // Event listeners to open modals
+        addMoneyBtn.addEventListener('click', () => {
+            addMoneyModal.style.display = 'flex';
+        });
+
+        withdrawMoneyBtn.addEventListener('click', () => {
+            withdrawMoneyModal.style.display = 'flex';
+        });
+
+        // Event listeners to close modals
+        closeAddMoney.addEventListener('click', () => {
+            addMoneyModal.style.display = 'none';
+        });
+
+        closeWithdrawMoney.addEventListener('click', () => {
+            withdrawMoneyModal.style.display = 'none';
+        });
+
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target === addMoneyModal) {
+                addMoneyModal.style.display = 'none';
+            } else if (e.target === withdrawMoneyModal) {
+                withdrawMoneyModal.style.display = 'none';
+            }
+        });
+    </script>
+
 {% endblock %}
+

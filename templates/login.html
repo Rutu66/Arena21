@@ -1,90 +1,123 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login/Signup - Arena21</title>
+    <title>Login - Arena21</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0;
             font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f2f2f2;
+            color: #00796b;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            color: #333;
-            background-color: #f0f0f0;
+            min-height: 100vh;
         }
 
         .container {
-            width: 480px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+            width: 380px;
+            background: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            justify-content: center;
+            margin: 0 15px;
         }
-        
-        
+
+        .header-image {
+            background-image: url("{% static 'images/1.png' %}");
+            background-size: cover;
+            background-position: center;
+            border-bottom-right-radius: 160px;
+            border-bottom-left-radius: 160px;
+            padding-top: 60%; /* Maintain aspect ratio */
+            position: relative;
+        }
+
+        .header-content {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            z-index: 2;
+        }
 
         header {
             font-size: 28px;
             color: #00796b;
+            padding: 15px 0;
             font-weight: 700;
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333;
             margin-bottom: 20px;
         }
 
-        main h2 {
-            font-size: 24px;
-            color: #004d40;
-            margin: 15px 0;
-        }
-
         form {
-            width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        input {
-            width: calc(100% - 20px);
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="email"] {
+            width: 100%;
+            padding: 14px;
             margin-bottom: 15px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
             font-size: 16px;
+            color: #333;
             box-sizing: border-box;
         }
 
-        input[type="submit"] {
-            background-color: #00796b;
-            color: white;
-            border: none;
+        form input[type="submit"] {
+            width: 100%;
             padding: 14px;
+            background-color: #00796b;
+            color: #fff;
+            border: none;
             border-radius: 30px;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        input[type="submit"]:hover {
+        form input[type="submit"]:hover {
             background-color: #004d40;
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
         }
 
         .footer {
             margin-top: 20px;
             font-size: 14px;
-            color: #00796b;
+            color: #666;
         }
 
         .footer a {
@@ -101,51 +134,37 @@
             display: none;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header {
-                font-size: 24px;
-            }
-
-            main h2 {
-                font-size: 22px;
-            }
-
-            input {
-                font-size: 14px;
-            }
-
-            input[type="submit"] {
-                font-size: 16px;
-                padding: 12px;
-            }
-        }
-
         @media (max-width: 480px) {
-            header {
+            .header-content {
                 font-size: 20px;
             }
 
-            main h2 {
+            h2 {
                 font-size: 20px;
             }
 
-            input {
-                font-size: 12px;
-            }
-
-            input[type="submit"] {
+            form input[type="text"],
+            form input[type="password"],
+            form input[type="email"],
+            form input[type="submit"] {
+                padding: 12px;
                 font-size: 14px;
-                padding: 10px;
+            }
+
+            .footer {
+                font-size: 12px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <header>
-            Arena21
-        </header>
+        <div class="header-image">
+            <div class="header-content">
+                {% comment %} Arena21 {% endcomment %}
+            </div>
+        </div>
         <div id="login-form">
             <main>
                 <h2>Login</h2>
@@ -187,36 +206,7 @@
             document.getElementById('signup-form').classList.add('hidden');
             document.getElementById('login-form').classList.remove('hidden');
         }
-
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        const csrftoken = getCookie('csrftoken');
-
-        function csrfSafeMethod(method) {
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
     </script>
 </body>
+
 </html>
-    
