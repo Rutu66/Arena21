@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +22,7 @@
         }
 
         .container {
-
+            
             width: 380px;
             background: #ffffff;
             border-radius: 30px;
@@ -34,8 +33,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin: 0 15px;
-            
+            margin: 15px;
         }
 
         .header-image {
@@ -44,7 +42,7 @@
             background-position: center;
             border-bottom-right-radius: 160px;
             border-bottom-left-radius: 160px;
-            padding-top: 60%; /* Maintain aspect ratio */
+            padding-top: 60%;
             position: relative;
         }
 
@@ -85,8 +83,8 @@
             display: inline-block;
             margin: 20px auto;
             padding: 10px 20px;
-            background-color: #00796b; /* Button background color */
-            color: #ffffff; /* Text color */
+            background-color: #00796b;
+            color: #ffffff;
             font-size: 16px;
             font-weight: 700;
             text-decoration: none;
@@ -94,19 +92,47 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s, transform 0.3s;
         }
-        
+
         .get-started:hover {
-            background-color: #004d40; /* Darker background color on hover */
-            transform: translateY(-2px); /* Slight lift effect */
+            background-color: #004d40;
+            transform: translateY(-2px);
         }
-        
+
         .get-started:active {
-            background-color: #00332b; /* Even darker background color on click */
-            transform: translateY(0); /* Remove lift effect */
+            background-color: #00332b;
+            transform: translateY(0);
         }
-        
 
+        /* Adjusting padding and font sizes for smaller screens */
+        @media (max-width: 768px) {
+            .header-image {
+                padding-top: 70%; /* Adjust aspect ratio for smaller screens */
+            }
 
+            h2 {
+                font-size: 20px;
+            }
+
+            .get-started {
+                padding: 8px 18px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-image {
+                padding-top: 80%; /* Adjust aspect ratio for very small screens */
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .get-started {
+                padding: 6px 16px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 
@@ -117,18 +143,13 @@
                 {% comment %} Arena21 {% endcomment %}
             </div>
         </div>
-        <div class="illustration"></div>
         <main>
             <h2>Will India Win the World Cup?</h2>
             <p>Predict & Earn</p>
             <p class="subtext">Predict the outcome of real-world events & earn money.</p>
         </main>
-        <a href="{% url 'login' %}" class="get-started">Get Started</a> 
-        
+        <a href="{% url 'login' %}" class="get-started">Get Started</a>
     </div>
-    <script>
-        
-    </script>
 </body>
 
 </html>
