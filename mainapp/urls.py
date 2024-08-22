@@ -11,7 +11,8 @@ urlpatterns = [
     path('signup/', signup_view, name='signup'),
     path('index/', index_view, name='index'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('logout/', logout_view, name='logout'),
+
     path('', lending, name='lending'),
     path('event_active/<int:event_id>/', event_active, name='event_active'),
     path('event_closed/<int:event_id>/', event_closed, name='event_closed'),

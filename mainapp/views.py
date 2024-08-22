@@ -12,6 +12,8 @@ from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
+from django.contrib.auth import logout
+from django.utils.translation import gettext_lazy as _
 
 
 
@@ -84,6 +86,15 @@ def index_view(request):
     }
 
     return render(request, 'index.html', context)
+
+def logout_view(request):
+    # Log the user out
+    messages.add_message(request, messages.INFO, _('You have been logged out.'))
+
+    logout(request)
+    
+    # Redirect to the desired page after logout
+    return redirect('login')  # You can replace 'login' with the name or path of the desired redirect page
 
 
 
