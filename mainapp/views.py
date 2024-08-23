@@ -243,7 +243,7 @@ def place_order(request):
                 )
 
                 match_order(order)
-                return redirect('dashboard')
+                return redirect('portfolio')
             else:
                 form.add_error(None, 'Insufficient balance')
         else:
@@ -252,6 +252,7 @@ def place_order(request):
         form = OrderForm()
 
     return render(request, 'placeorder.html', {'form': form})
+
 
 @login_required
 def match_order(order):
