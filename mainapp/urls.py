@@ -22,6 +22,8 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     
     path('add_money/', add_money, name='add_money'),
+    path('withdraw_money/', withdraw_money, name='withdraw_money'),
+
     path('place_order/', place_order, name='place_order'),
     path('cancel_order/<int:order_id>/', cancel_order, name='cancel_order'),
 

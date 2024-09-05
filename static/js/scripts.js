@@ -1,5 +1,3 @@
-
-
 // index page
 
 
@@ -155,14 +153,24 @@ function changeValue(id, step) {
     if (newValue >= parseInt(rangeInput.min) && newValue <= parseInt(rangeInput.max)) {
         rangeInput.value = newValue;
         numberInput.value = newValue;
+        
+        // Trigger a change event to update put and get value
+        rangeInput.dispatchEvent(new Event('input'));
+        numberInput.dispatchEvent(new Event('input'));
     }
 }
 
 // Function to synchronize the range and number inputs
 function syncInputs(sourceId, targetId) {
-    document.getElementById(targetId).value = document.getElementById(sourceId).value;
+    const sourceInput = document.getElementById(sourceId);
+    const targetInput = document.getElementById(targetId);
+    targetInput.value = sourceInput.value;
+
+    // Trigger a change event to ensure put and get values are updated
+    targetInput.dispatchEvent(new Event('input'));
 }
 
+// Add event listeners for the increment buttons
 document.querySelectorAll('.increment').forEach(button => {
     button.addEventListener('click', function() {
         const targetId = this.getAttribute('data-target');
@@ -172,11 +180,12 @@ document.querySelectorAll('.increment').forEach(button => {
 
         if (currentValue < maxValue) {
             input.value = currentValue + 1;
-            updateRange(targetId);
+            updateRangeAndNumber(targetId);
         }
     });
 });
 
+// Add event listeners for the decrement buttons
 document.querySelectorAll('.decrement').forEach(button => {
     button.addEventListener('click', function() {
         const targetId = this.getAttribute('data-target');
@@ -186,15 +195,46 @@ document.querySelectorAll('.decrement').forEach(button => {
 
         if (currentValue > minValue) {
             input.value = currentValue - 1;
-            updateRange(targetId);
+            updateRangeAndNumber(targetId);
         }
     });
 });
 
-function updateRange(targetId) {
-    const input = document.getElementById(targetId);
+// Function to update both range and number inputs
+function updateRangeAndNumber(targetId) {
+    const numberInput = document.getElementById(targetId);
     const rangeInput = document.getElementById(targetId.replace('Value', ''));
-    rangeInput.value = input.value;
+    
+    // Sync the number input value with the range input
+    rangeInput.value = numberInput.value;
+
+    // Trigger a change event to update put and get value
+    rangeInput.dispatchEvent(new Event('input'));
+    numberInput.dispatchEvent(new Event('input'));
+}
+
+// Add event listeners for the range input to sync with the number input
+document.querySelectorAll('input[type="range"]').forEach(rangeInput => {
+    rangeInput.addEventListener('input', function() {
+        const numberInputId = this.id + 'Value';
+        syncInputs(this.id, numberInputId);
+        updatePutAndGetValues(); // Trigger your function to update put and get values
+    });
+});
+
+// Add event listeners for the number input to sync with the range input
+document.querySelectorAll('input[type="number"]').forEach(numberInput => {
+    numberInput.addEventListener('input', function() {
+        const rangeInputId = this.id.replace('Value', '');
+        syncInputs(this.id, rangeInputId);
+        updatePutAndGetValues(); // Trigger your function to update put and get values
+    });
+});
+
+// Function to update put and get values (placeholder)
+function updatePutAndGetValues() {
+    // Your logic for updating the put and get values based on the current input values
+    console.log('Put and get values updated');
 }
 
 

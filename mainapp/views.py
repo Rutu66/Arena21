@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
-from mainapp.forms import SignupForm, AddMoneyForm, OrderForm
+from mainapp.forms import SignupForm, AddMoneyForm, OrderForm, WithdrawMoneyForm
 from .models import Profile, Order, Transaction, MatchOrder, CancelOrder, Category, SubCategory, Event,  SettledEvent, OrderStatus, ClosedEvent
 from decimal import Decimal
 import logging
@@ -180,7 +180,9 @@ def portfolio(request):
 @login_required
 def dashboard(request):
     profile = Profile.objects.get(user=request.user)
-    return render(request, 'dashboard.html', {'profile': profile})
+    recent_transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')[:5]
+    return render(request, 'dashboard.html', {'profile': profile, 'transactions': recent_transactions})
+
 
 
 @login_required
@@ -199,24 +201,64 @@ def add_money(request):
         form = AddMoneyForm()
     return render(request, 'addmoney.html', {'form': form})
 
+@login_required
+def withdraw_money(request):
+    if request.method == 'POST':
+        form = WithdrawMoneyForm(request.POST)
+        if form.is_valid():
+            amount = Decimal(form.cleaned_data['amount'])  # Ensure amount is Decimal
+            profile, created = Profile.objects.get_or_create(user=request.user)
+            profile.balance = Decimal(profile.balance or '0.00')  # Ensure balance is Decimal
+
+            # Ensure sufficient balance for withdrawal
+            if amount <= profile.balance:
+                profile.balance -= amount  # Perform subtraction with Decimal
+                profile.save()
+
+                # Create a withdrawal transaction
+                Transaction.objects.create(user=request.user, profile=profile, amount=amount, transaction_type='debit')
+
+                return redirect('dashboard')
+            else:
+                # Handle case of insufficient balance
+                form.add_error('amount', 'Insufficient balance.')
+    else:
+        form = WithdrawMoneyForm()
+    
+    return render(request, 'withdrawmoney.html', {'form': form})
+
 
 @login_required
 def place_order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            order = form.save(commit=False)
-            order.user = request.user
-
-            # Get cleaned data from the form
             quantity = form.cleaned_data['quantity']
             price_per_quantity = form.cleaned_data['price_per_quantity']
+            event = form.cleaned_data['event']
+            response = form.cleaned_data['response']
 
-            # Set total_price based on cleaned_data
-            order.total_price = quantity * price_per_quantity
+            # Check if an existing order matches the criteria
+            try:
+                order = Order.objects.get(
+                    user=request.user,
+                    event=event,
+                    response=response,
+                    price_per_quantity=price_per_quantity,
+                    status='pending'  # Only consider pending orders
+                )
+                # If an existing order is found, update it
+                order.quantity += quantity
+                order.total_price += quantity * price_per_quantity
+
+            except Order.DoesNotExist:
+                # If no matching order is found, create a new one
+                order = form.save(commit=False)
+                order.user = request.user
+                order.total_price = quantity * price_per_quantity
 
             profile, created = Profile.objects.get_or_create(user=request.user)
-            profile.balance = Decimal(profile.balance or '0.00')  # Ensure it's a Decimal
+            profile.balance = Decimal(profile.balance or '0.00')
 
             logger.debug(f"User: {request.user}, Profile balance: {profile.balance}, Order total price: {order.total_price}")
 
@@ -226,21 +268,27 @@ def place_order(request):
                 Transaction.objects.create(user=request.user, profile=profile, amount=order.total_price, transaction_type='debit')
                 order.save()
 
-                # Create or update OrderStatus object
-                order_status, created = OrderStatus.objects.update_or_create(
+                # Check if an OrderStatus already exists
+                order_status, created = OrderStatus.objects.get_or_create(
                     user=order.user,
                     event=order.event,
+                    response=order.response,
+                    price_per_quantity=order.price_per_quantity,
                     defaults={
-                        'response': order.response,
                         'quantity': order.quantity,
-                        'price_per_quantity': order.price_per_quantity,
                         'total_price': order.total_price,
-                        'matched_quantity': order.matched_quantity,
-                        'cancelled_quantity': 0,  # Initialize cancelled_quantity to 0
-                        'status': order.status,
+                        'matched_quantity': 0,
+                        'cancelled_quantity': 0,
+                        'status': 'pending',
                         'timestamp': order.timestamp
                     }
                 )
+
+                if not created:  # If it already exists, update the quantity and total price
+                    order_status.quantity += quantity
+                    order_status.total_price += quantity * price_per_quantity
+                    order_status.status = 'pending'
+                    order_status.save()
 
                 match_order(order)
                 return redirect('portfolio')
@@ -256,7 +304,6 @@ def place_order(request):
 
 @login_required
 def match_order(order):
-    # Define the price matching logic based on given patterns
     match_logic = {
         Decimal('9.00'): Decimal('1.00'),
         Decimal('8.00'): Decimal('2.00'),
@@ -275,12 +322,11 @@ def match_order(order):
 
     opposite_response = 'yes' if order.response == 'no' else 'no'
     
-    # Filter for opposite response, matching event, pending status, and exclude same user
     opposite_orders = Order.objects.filter(
         event=order.event,
         response=opposite_response,
         status='pending'
-    ).exclude(user=order.user).order_by('timestamp')  # Exclude orders from the same user and sort by timestamp, earliest first
+    ).exclude(user=order.user).order_by('timestamp')
 
     for opposite_order in opposite_orders:
         if order_quantity > 0 and opposite_order.quantity > 0:
@@ -288,46 +334,52 @@ def match_order(order):
             required_opposite_price = match_logic.get(order_price_per_quantity, None)
             
             if required_opposite_price != opposite_order_price_per_quantity:
-                continue  # Skip if price_per_quantity does not match
+                continue
             
-            # Determine the quantity that can be matched
             match_quantity = min(order_quantity, opposite_order.quantity)
-            
-            # Calculate the total match price for the current match
             total_match_price = Decimal(match_quantity) * order_price_per_quantity
             
-            # Update quantities
             order_quantity -= match_quantity
             opposite_order.quantity -= match_quantity
             order_matched_quantity += match_quantity
             opposite_order.matched_quantity += match_quantity
             
-            # Save changes
             order.quantity = order_quantity
             order.matched_quantity = order_matched_quantity
             order.save()
             
             opposite_order.save()
             
-            # Update OrderStatus object
-            OrderStatus.objects.filter(
+            order_status, created = OrderStatus.objects.get_or_create(
                 user=order.user,
-                event=order.event
-            ).update(
-                matched_quantity=order_matched_quantity,
-                status='partial' if order_quantity > 0 else 'matched'
+                event=order.event,
+                response=order.response,
+                price_per_quantity=order_price_per_quantity,
+                defaults={
+                    'matched_quantity': order_matched_quantity,
+                    'status': 'partial' if order_quantity > 0 else 'matched'
+                }
             )
+            if not created:
+                order_status.matched_quantity += match_quantity
+                order_status.status = 'partial' if order_quantity > 0 else 'matched'
+                order_status.save()
             
-            # Update OrderStatus for the opposite order
-            OrderStatus.objects.filter(
+            opposite_order_status, created = OrderStatus.objects.get_or_create(
                 user=opposite_order.user,
-                event=opposite_order.event
-            ).update(
-                matched_quantity=opposite_order.matched_quantity,
-                status='partial' if opposite_order.quantity > 0 else 'matched'
+                event=opposite_order.event,
+                response=opposite_response,
+                price_per_quantity=opposite_order_price_per_quantity,
+                defaults={
+                    'matched_quantity': opposite_order.matched_quantity,
+                    'status': 'partial' if opposite_order.quantity > 0 else 'matched'
+                }
             )
+            if not created:
+                opposite_order_status.matched_quantity += match_quantity
+                opposite_order_status.status = 'partial' if opposite_order.quantity > 0 else 'matched'
+                opposite_order_status.save()
 
-            # Check for existing entries in MatchOrder and update or create a new one
             match_order, created = MatchOrder.objects.get_or_create(
                 user=order.user,
                 event=order.event,
@@ -340,7 +392,6 @@ def match_order(order):
                 match_order.total_match_price += total_match_price
                 match_order.save()
             
-            # Check for existing entries in MatchOrder for the opposite order
             opposite_match_order, created = MatchOrder.objects.get_or_create(
                 user=opposite_order.user,
                 event=opposite_order.event,
@@ -353,44 +404,37 @@ def match_order(order):
                 opposite_match_order.total_match_price += total_match_price
                 opposite_match_order.save()
 
-            # Mark opposite order as completed if fully matched
             if opposite_order.quantity == 0:
                 opposite_order.status = 'completed'
                 opposite_order.save()
-                opposite_order.delete()  # Remove the fully matched opposite order from the Order table
+                opposite_order.delete()
                 
-            # If the current order is fully matched, mark it as completed and delete it
             if order_quantity == 0:
                 order.status = 'completed'
                 order.save()
-                order.delete()  # Remove the fully matched order from the Order table
+                order.delete()
                 break
     
-    # If there is still quantity left, the current order remains pending
     if order_quantity > 0:
         order.status = 'pending'
         order.save()
     else:
         order.status = 'completed'
         order.save()
-        order.delete()  # Ensure the completed order is removed from the Order table
+        order.delete()
 
 @login_required
 def cancel_order(request, order_id):
     if request.method == 'POST':
         try:
-            # Retrieve the order and ensure it's associated with the current user
             order = get_object_or_404(Order, id=order_id, user=request.user)
 
-            # Check if the order is still pending
             if order.status == 'pending':
-                # Refund the order amount to the user's balance
                 profile = get_object_or_404(Profile, user=request.user)
-                profile.balance = Decimal(profile.balance or '0.00')  # Ensure it's a Decimal
-                profile.balance += order.total_price  # Ensure total_price is Decimal
+                profile.balance = Decimal(profile.balance or '0.00')
+                profile.balance += order.total_price
                 profile.save()
 
-                # Record the transaction
                 Transaction.objects.create(
                     user=request.user,
                     profile=profile,
@@ -398,33 +442,37 @@ def cancel_order(request, order_id):
                     transaction_type='refund'
                 )
 
-                # Update the OrderStatus object
-                order_status = OrderStatus.objects.filter(
+                # Update or create OrderStatus entries
+                order_statuses = OrderStatus.objects.filter(
                     user=order.user,
-                    event=order.event
-                ).first()
+                    event=order.event,
+                    response=order.response,
+                    price_per_quantity=order.price_per_quantity
+                )
 
-                if order_status:
-                    order_status.cancelled_quantity += order.quantity
-                    order_status.status = 'cancelled'
+                for order_status in order_statuses:
+                    if order_status.matched_quantity > 0:
+                        order_status.cancelled_quantity += order.quantity
+                        order_status.status = 'partial' if order_status.cancelled_quantity < order_status.quantity else 'cancelled'
+                    else:
+                        order_status.cancelled_quantity += order.quantity
+                        order_status.status = 'cancelled'
+
                     order_status.save()
-                else:
-                    return JsonResponse({
-                        'status': 'error',
-                        'message': 'OrderStatus does not exist.'
-                    })
 
-                # Save the cancelled order in the CancelOrder table
-                CancelOrder.objects.create(
+                # Update or create CancelOrder entry
+                cancel_order, created = CancelOrder.objects.get_or_create(
                     user=request.user,
                     event=order.event,
                     response=order.response,
-                    cancel_quantity=order.quantity,
                     price_per_quantity=order.price_per_quantity,
-                    total_cancel_price=order.total_price
+                    defaults={'cancel_quantity': order.quantity, 'total_cancel_price': order.total_price}
                 )
+                if not created:
+                    cancel_order.cancel_quantity += order.quantity
+                    cancel_order.total_cancel_price += order.total_price
+                    cancel_order.save()
 
-                # Delete the order record
                 order.delete()
 
                 return JsonResponse({
@@ -558,6 +606,8 @@ def settle_event(request, event_id, settle_response):
 
     messages.success(request, 'Event settled, all pending orders cancelled, and related match/cancel records deleted successfully.')
     return redirect('dashboard')
+
+
 
 
 @csrf_exempt

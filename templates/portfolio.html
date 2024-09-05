@@ -77,7 +77,7 @@
                         <div class="dash-invested">Invested ₹0.5 • Gains ₹0</div>
                     </div>
                 </div>
-                <a href="{% url 'event_closed' event.id %}" class="dash-btn">View</a>
+                {% comment %} <a href="{% url 'event_closed' event.id %}" class="dash-btn">View</a> {% endcomment %}
             {% endfor %} 
             
         </div>

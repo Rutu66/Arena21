@@ -1637,14 +1637,6 @@ transform: scale(1.02); /* Slightly scale up on hover */
 /* Edit Profile css */
 
      
-        .pro-container {
-            max-width: 480px;
-            margin: 0px auto;
-            padding: 20px;
-           
-            border: 1px solid #e0e0e0;
-        }
-
         .pro-profile-header {
             margin-bottom: 30px;
             font-size: 32px;

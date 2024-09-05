@@ -26,9 +26,9 @@ from .models import *
 
 class AddMoneyForm(forms.Form):
     amount = forms.DecimalField(max_digits=10, decimal_places=2)
-
-from django import forms
-from .models import Order, Event
+    
+class WithdrawMoneyForm(forms.Form):
+    amount = forms.DecimalField(max_digits=10, decimal_places=2, label='Amount to Withdraw')
 
 class OrderForm(forms.ModelForm):
     class Meta:
